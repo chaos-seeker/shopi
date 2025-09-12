@@ -5,11 +5,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { BiCategory } from 'react-icons/bi';
 import { HiOutlineFilter } from 'react-icons/hi';
 import {
   HiChevronLeft,
-  HiMiniBars3,
   HiMiniXMark,
   HiOutlineMagnifyingGlass,
   HiOutlineShoppingCart,
@@ -19,7 +17,6 @@ import {
 import { RiUser3Line } from 'react-icons/ri';
 import { ThreeDots } from 'react-loader-spinner';
 import { ToggleSection } from '@/components/toggle-section';
-import { CATEGORIES } from '@/constants/categories';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
 import { cartSlice } from '@/slices/cart';
 import { cn } from '@/utils/cn';
