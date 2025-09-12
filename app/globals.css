@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* global */
+
+:root {
+  --red: #ed1944;
+  --green: #00a651;
+  --gray: #f8f9fb;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+body {
+  @apply text-[--foreground] overflow-x-hidden bg-[--background] text-gray-600;
+}
+p {
+  @apply text-gray-700;
+}
+input {
+  @apply outline-none;
+}
+
+/* custom classes */
+
+.show {
+  @apply opacity-100 visible;
+}
+.hide {
+  @apply opacity-0 invisible;
+}
+
+/* home/hero-slider */
+
+#hero_slider {
+  .pagination {
+    direction: ltr;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    height: 24px;
+    .swiper-pagination-bullet {
+      background-color: rgba(255, 255, 255, 0.4);
+      transition: all 0.3s;
+      opacity: 1;
+    }
+    .swiper-pagination-bullet-active {
+      position: relative;
+      width: 25px;
+      border-radius: 10px;
+      &::after {
+        animation: pagination-progess 3s normal forwards;
+        border-radius: 10px;
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 8px;
+        background-color: #fff;
+        @keyframes pagination-progess {
+          0% {
+            width: 0%;
+          }
+          100% {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
