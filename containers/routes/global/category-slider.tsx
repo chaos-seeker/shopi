@@ -4,11 +4,11 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { getAllCategories } from '@/actions/category/get-all-categories';
 import { CardBorderBottom } from '@/components/card-border-bottom';
+import { Skeleton } from '@/components/skeleton';
 import { SliderNavigation } from '@/components/slider-navigation';
 import { TCategory } from '@/types/category';
 import { cn } from '@/utils/cn';
 import { useQuery } from '@tanstack/react-query';
-import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -41,9 +41,7 @@ export function CategorySlider() {
       )}
     >
       {isLoading ? (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="animate-spin text-gray-400" size={32} />
-        </div>
+        <CategorySliderSkeleton />
       ) : (
         <>
           <Slider swiperRef={swiperRef} categories={categories || []} />
@@ -53,6 +51,35 @@ export function CategorySlider() {
         </>
       )}
     </section>
+  );
+}
+
+function CategorySliderSkeleton() {
+  return (
+    <Swiper
+      slidesPerView="auto"
+      spaceBetween={13}
+      modules={[Autoplay]}
+      id="category-slider-skeleton"
+      className="container"
+    >
+      {Array.from({ length: 6 }).map((_, index) => (
+        <SwiperSlide key={index} className="w-[250px]!">
+          <div className="group overflow-hidden rounded-xl border bg-white">
+            <div className="flex items-center justify-between gap-5 p-3">
+              <div className="flex items-center gap-3">
+                <Skeleton className="size-[60px] rounded-md" />
+                <div className="flex flex-col gap-2">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-3 w-16" />
+                </div>
+              </div>
+              <CardBorderBottom />
+            </div>
+          </div>
+        </SwiperSlide>
+      ))}
+    </Swiper>
   );
 }
 

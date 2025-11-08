@@ -1,9 +1,9 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { TProduct } from '@/types/product';
-import { cn } from '@/utils/cn';
 import { CardBorderBottom } from './card-border-bottom';
 import { ProductCardFooter } from './product-card-footer';
+import { TProduct } from '@/types/product';
+import { cn } from '@/utils/cn';
+import Image from 'next/image';
+import Link from 'next/link';
 
 interface IProps {
   data: TProduct;
@@ -12,7 +12,7 @@ interface IProps {
 export function ProductCard(props: IProps) {
   return (
     <div key={props.data.id} className="group overflow-hidden">
-      <div className="relative flex !h-[330px] w-full flex-col items-center justify-center overflow-hidden p-5">
+      <div className="relative flex h-[330px] w-full flex-col items-center justify-center overflow-hidden p-5">
         <ImageWithText data={props.data} />
         <ProductCardFooter
           data={props.data}

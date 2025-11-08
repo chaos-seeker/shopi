@@ -28,7 +28,8 @@
   p {
     @apply text-gray-700;
   }
-  input, textarea {
+  input,
+  textarea {
     @apply outline-none;
   }
   input[type='number']::-webkit-inner-spin-button,
@@ -86,5 +87,17 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     @apply hidden;
+  }
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
   }
 }
