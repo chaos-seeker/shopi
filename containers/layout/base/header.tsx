@@ -257,6 +257,13 @@ const MobileBottomCart = () => {
                         onClick={() =>
                           localstorageCart.reducers.increment(item)
                         }
+                        disabled={
+                          !localstorageCart.selectors.canIncrement(item)
+                        }
+                        className={cn({
+                          'opacity-50 cursor-not-allowed':
+                            !localstorageCart.selectors.canIncrement(item),
+                        })}
                       >
                         +
                       </button>
@@ -512,7 +519,7 @@ const DesktopBottomCart = () => {
           <ShoppingCart className="text-gray-700" size={24} />
           <p className="font-bold text-gray-700">سبد خرید</p>
         </div>
-        <p className="flex size-6 items-center justify-center rounded-full bg-red text-lg font-bold text-white">
+        <p className="flex size-6 items-center justify-center rounded-full bg-red font-bold text-white">
           {localstorageCart.selectors.totalItems()}
         </p>
       </button>

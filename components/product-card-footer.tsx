@@ -1,10 +1,10 @@
 'use client';
 
-import { useKillua } from 'killua';
-import { ShoppingBag, Trash2 } from 'lucide-react';
 import { cartSlice } from '@/slices/cart';
 import { TProduct } from '@/types/product';
 import { cn } from '@/utils/cn';
+import { useKillua } from 'killua';
+import { ShoppingBag, Trash2 } from 'lucide-react';
 
 type TProductCardType = 'offer-slider' | 'product-slider' | 'single-product';
 interface IProductCardActionsProps {
@@ -18,7 +18,7 @@ export function ProductCardPrice({ data }: { data: TProduct }) {
   const discount = data.discount ?? 0;
   const priceWithoutDiscount = price;
   const priceWithDiscount = price * (1 - discount / 100);
-  
+
   return (
     <div>
       <del className="absolute bottom-8 left-20 text-smp text-gray-50">
@@ -110,7 +110,16 @@ export function ProductCardFooter({
             },
           )}
         >
-          <button onClick={handleIncrement}>+</button>
+          <button
+            onClick={handleIncrement}
+            disabled={!localstorageCart.selectors.canIncrement(data)}
+            className={cn({
+              'opacity-50 cursor-not-allowed':
+                !localstorageCart.selectors.canIncrement(data),
+            })}
+          >
+            +
+          </button>
           <span>{quantity}</span>
           {quantity === 1 ? (
             <button onClick={handleRemove}>
