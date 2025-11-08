@@ -1,76 +1,155 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-/* global */
+@source "../app/**/*.{js,ts,jsx,tsx,mdx}";
+@source "../components/**/*.{js,ts,jsx,tsx,mdx}";
+@source "../containers/**/*.{js,ts,jsx,tsx,mdx}";
 
-:root {
-  --red: #ed1944;
-  --green: #00a651;
-  --gray: #f8f9fb;
+@theme inline {
+  --color-red: #ed1944;
+  --color-green: #00a651;
+  --color-gray: #f8f9fb;
+  --transition-duration: 300ms;
+  --color-border: #efefef;
+  --text-xsp: 13px;
+  --text-smp: 15px;
+  --text-mdp: 17px;
 }
 
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-body {
-  @apply text-[--foreground] overflow-x-hidden bg-[--background] text-gray-600;
-}
-p {
-  @apply text-gray-700;
-}
-input {
-  @apply outline-none;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply text-[--foreground] overflow-x-hidden bg-[--background] text-gray-600;
+  }
+  p {
+    @apply text-gray-700;
+  }
+  input {
+    @apply outline-none;
+  }
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  button {
+    @apply cursor-pointer;
+  }
 }
 
-/* custom classes */
-
-.show {
-  @apply opacity-100 visible;
-}
-.hide {
-  @apply opacity-0 invisible;
-}
-
-/* home/hero-slider */
-
-#hero_slider {
-  .pagination {
-    direction: ltr;
-    display: flex;
-    align-items: center;
-    width: fit-content;
-    height: 24px;
-    .swiper-pagination-bullet {
-      background-color: rgba(255, 255, 255, 0.4);
-      transition: all 0.3s;
-      opacity: 1;
-    }
-    .swiper-pagination-bullet-active {
-      position: relative;
-      width: 25px;
-      border-radius: 10px;
-      &::after {
-        animation: pagination-progess 3s normal forwards;
+@layer components {
+  #hero_slider {
+    .pagination {
+      direction: ltr;
+      display: flex;
+      align-items: center;
+      width: fit-content;
+      height: 24px;
+      .swiper-pagination-bullet {
+        background-color: rgba(255, 255, 255, 0.4);
+        transition: all 0.3s;
+        opacity: 1;
+      }
+      .swiper-pagination-bullet-active {
+        position: relative;
+        width: 25px;
         border-radius: 10px;
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 8px;
-        background-color: #fff;
-        @keyframes pagination-progess {
-          0% {
-            width: 0%;
-          }
-          100% {
-            width: 100%;
-          }
+        &::after {
+          animation: pagination-progess 3s normal forwards;
+          border-radius: 10px;
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 8px;
+          background-color: #fff;
         }
       }
     }
+  }
+
+  @keyframes pagination-progess {
+    0% {
+      width: 0%;
+    }
+    100% {
+      width: 100%;
+    }
+  }
+}
+
+@utility container {
+  @apply mx-auto max-w-7xl px-4;
+}
+
+@layer utilities {
+  .show {
+    @apply opacity-100 visible;
+  }
+
+  .hide {
+    @apply opacity-0 invisible;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Aspect Ratio Utilities */
+  .aspect-w-1 {
+    position: relative;
+  }
+
+  .aspect-w-1::before {
+    content: '';
+    display: block;
+    padding-bottom: 100%;
+  }
+
+  .aspect-w-1 > * {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  .aspect-h-1 {
+    position: relative;
+  }
+
+  .aspect-h-1.aspect-w-2::before {
+    content: '';
+    display: block;
+    padding-bottom: 50%;
+  }
+
+  .aspect-h-1.aspect-w-3::before {
+    content: '';
+    display: block;
+    padding-bottom: 33.333333%;
+  }
+
+  .aspect-h-1.aspect-w-\[2\.5\]::before {
+    content: '';
+    display: block;
+    padding-bottom: 40%;
+  }
+
+  .aspect-h-1 > * {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 }

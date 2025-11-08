@@ -1,26 +1,61 @@
 'use client';
 
-import { AppProgressBar } from 'next-nprogress-bar';
+import { ProgressProvider } from '@bprogress/next/app';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
-import type { ReactNode } from 'react';
-import { Suspense } from 'react';
+import { PropsWithChildren, Suspense } from 'react';
+import { Toaster } from 'react-hot-toast';
 
-interface IProps {
-  children: ReactNode;
-}
+const Bprogress = (props: PropsWithChildren) => {
+  return (
+    <ProgressProvider
+      height="4px"
+      color="#ed1943"
+      options={{ showSpinner: false }}
+      shallowRouting
+    >
+      {props.children}
+    </ProgressProvider>
+  );
+};
 
-export default function Providers({ children }: IProps) {
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+    },
+  },
+});
+
+const ReactQuery = (props: PropsWithChildren) => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      {props.children}
+    </QueryClientProvider>
+  );
+};
+
+const Nuqs = (props: PropsWithChildren) => {
+  return <NuqsAdapter>{props.children}</NuqsAdapter>;
+};
+
+const HotToast = () => {
+  return <Toaster position="top-center" containerClassName="toaster-wrapper" />;
+};
+
+export const Providers = (props: PropsWithChildren) => {
   return (
     <>
-      <AppProgressBar
-        height="4px"
-        color="#ED1944"
-        options={{ showSpinner: false }}
-        shallowRouting
-      />
-      <NuqsAdapter>
-        <Suspense>{children}</Suspense>
-      </NuqsAdapter>
+      <Bprogress>
+        <ReactQuery>
+          <Nuqs>
+            <Suspense>
+              <HotToast />
+              {props.children}
+            </Suspense>
+          </Nuqs>
+        </ReactQuery>
+      </Bprogress>
     </>
   );
-}
+};

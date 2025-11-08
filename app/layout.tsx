@@ -1,10 +1,10 @@
 import './globals.css';
+import { Providers } from './providers';
+import TemplateBase from '@/containers/templates/base';
+import { cn } from '@/utils/cn';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { ReactNode } from 'react';
-import TemplateBase from '@/containers/templates/base';
-import { cn } from '@/utils/cn';
-import Providers from './providers';
 
 export const metadata: Metadata = {
   title: 'شاپی',
