@@ -31,25 +31,31 @@ export function ListOrders() {
         cell: (info) => info.getValue(),
       }),
       columnHelper.accessor('user', {
-        header: 'کاربر',
+        header: 'نام و نام خانوادگی',
         cell: (info) => {
           const user = info.getValue();
           return user?.full_name || '-';
         },
       }),
-      columnHelper.accessor('amount', {
+      columnHelper.accessor('original_amount', {
         header: 'مبلغ',
-        cell: (info) => `${info.getValue().toLocaleString('fa-IR')} تومان`,
+        cell: (info) => {
+          const originalAmount = info.getValue();
+          return `${originalAmount.toLocaleString('fa-IR')} تومان`;
+        },
       }),
       columnHelper.accessor('discount', {
-        header: 'تخفیف',
+        header: 'مقدار تخفیف',
         cell: (info) => {
           const discountValue = info.getValue();
-          // Discount is stored as amount (not percentage), display as currency
           return discountValue > 0
             ? `${discountValue.toLocaleString('fa-IR')} تومان`
             : '-';
         },
+      }),
+      columnHelper.accessor('amount', {
+        header: 'مبلغ نهایی',
+        cell: (info) => `${info.getValue().toLocaleString('fa-IR')} تومان`,
       }),
       columnHelper.accessor('created_at', {
         header: 'تاریخ ثبت',
@@ -140,4 +146,3 @@ export function ListOrders() {
     </div>
   );
 }
-

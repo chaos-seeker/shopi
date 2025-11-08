@@ -177,12 +177,17 @@ const MobileBottomCart = () => {
     try {
       const totalPrice = localstorageCart.selectors.totalPrice();
       const totalDiscount = localstorageCart.selectors.totalDiscount();
+      // Calculate original amount (before discount)
+      const originalAmount = totalPrice + totalDiscount;
+      // Round all values to 2 decimal places
+      const roundedOriginalAmount = Math.round(originalAmount * 100) / 100;
       const roundedDiscount = Math.round(totalDiscount * 100) / 100;
-      const discount = roundedDiscount > 999.99 ? 0 : roundedDiscount;
+      const roundedAmount = Math.round(totalPrice * 100) / 100;
       const result = await createOrder({
         user: userData,
-        amount: Math.round(totalPrice * 100) / 100,
-        discount,
+        original_amount: roundedOriginalAmount,
+        discount: roundedDiscount,
+        amount: roundedAmount,
       });
 
       if (result.error) {
@@ -512,14 +517,17 @@ const DesktopBottomCart = () => {
     try {
       const totalPrice = localstorageCart.selectors.totalPrice();
       const totalDiscount = localstorageCart.selectors.totalDiscount();
-      // Round amounts to 2 decimal places and limit discount to 999.99 (DECIMAL(5,2) max)
-      // If discount exceeds limit, set to 0 since discounts are already applied in amount
+      // Calculate original amount (before discount)
+      const originalAmount = totalPrice + totalDiscount;
+      // Round all values to 2 decimal places
+      const roundedOriginalAmount = Math.round(originalAmount * 100) / 100;
       const roundedDiscount = Math.round(totalDiscount * 100) / 100;
-      const discount = roundedDiscount > 999.99 ? 0 : roundedDiscount;
+      const roundedAmount = Math.round(totalPrice * 100) / 100;
       const result = await createOrder({
         user: userData,
-        amount: Math.round(totalPrice * 100) / 100,
-        discount,
+        original_amount: roundedOriginalAmount,
+        discount: roundedDiscount,
+        amount: roundedAmount,
       });
 
       if (result.error) {

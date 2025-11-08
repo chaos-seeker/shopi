@@ -157,11 +157,38 @@ EXECUTE FUNCTION update_updated_at_column();
 CREATE TABLE IF NOT EXISTS orders (
   id BIGSERIAL PRIMARY KEY,
   user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
+  original_amount DECIMAL(10, 2) NOT NULL,
+  discount DECIMAL(10, 2) NOT NULL DEFAULT 0,
   amount DECIMAL(10, 2) NOT NULL,
-  discount DECIMAL(5, 2) NOT NULL DEFAULT 0,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()) NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()) NOT NULL
 );
+
+-- Add original_amount and update discount column if they don't exist (migration)
+DO $$
+BEGIN
+  -- Add original_amount column if it doesn't exist
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'orders' AND column_name = 'original_amount'
+  ) THEN
+    ALTER TABLE orders ADD COLUMN original_amount DECIMAL(10, 2);
+    -- Set original_amount = amount + discount for existing records
+    UPDATE orders SET original_amount = amount + discount WHERE original_amount IS NULL;
+    -- Make it NOT NULL after setting values
+    ALTER TABLE orders ALTER COLUMN original_amount SET NOT NULL;
+  END IF;
+  
+  -- Update discount column type if it's still DECIMAL(5, 2)
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'orders' 
+    AND column_name = 'discount' 
+    AND numeric_precision = 5
+  ) THEN
+    ALTER TABLE orders ALTER COLUMN discount TYPE DECIMAL(10, 2);
+  END IF;
+END $$;
 
 -- Create index on user_id for faster lookups
 CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id);
