@@ -1,9 +1,11 @@
 import './globals.css';
 import { Providers } from './providers';
-import TemplateBase from '@/containers/templates/base';
+import LayoutBase from '@/containers/layout/base';
+import LayoutDashboard from '@/containers/layout/dashboard';
 import { cn } from '@/utils/cn';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
+import { headers } from 'next/headers';
 import { ReactNode } from 'react';
 
 export const metadata: Metadata = {
@@ -28,11 +30,15 @@ const fontYekanBakh = localFont({
   ],
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: ReactNode;
 }>) {
+  const headersList = await headers();
+  const pathname = headersList.get('x-pathname') || '';
+  const isDashboard = pathname.includes('/dashboard');
+
   return (
     <html
       suppressHydrationWarning
@@ -42,7 +48,11 @@ export default function RootLayout({
     >
       <body className={cn('flex flex-col h-dvh', fontYekanBakh.className)}>
         <Providers>
-          <TemplateBase>{children}</TemplateBase>
+          {isDashboard ? (
+            <LayoutDashboard>{children}</LayoutDashboard>
+          ) : (
+            <LayoutBase>{children}</LayoutBase>
+          )}
         </Providers>
       </body>
     </html>

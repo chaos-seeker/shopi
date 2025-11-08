@@ -1,15 +1,15 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import { ReactNode } from 'react';
 import { Footer } from './footer';
 import { Header } from './header';
+import { usePathname } from 'next/navigation';
+import { ReactNode } from 'react';
 
 interface ILayoutProps {
   children: ReactNode;
 }
 
-export default function TemplateBase(props: ILayoutProps) {
+export default function LayoutBase(props: ILayoutProps) {
   const pathname = usePathname();
   const isRouteAuth = pathname.includes('/auth');
   if (isRouteAuth) {

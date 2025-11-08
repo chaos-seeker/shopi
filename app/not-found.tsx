@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export default function Home() {
   return (
-    <div className="container flex size-full flex-col items-center justify-center gap-4">
+    <div className="container flex size-[calc(100dvh-200px)] w-full flex-col items-center justify-center gap-4">
       <Image
         src="/images/routes/not-found/404.png"
         alt="404"
