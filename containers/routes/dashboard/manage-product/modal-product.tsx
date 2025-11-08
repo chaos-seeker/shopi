@@ -7,6 +7,7 @@ import { updateProduct } from '@/actions/product/update-product';
 import { Input } from '@/components/input';
 import { InputImage } from '@/components/input-image';
 import { Label } from '@/components/label';
+import { Modal } from '@/components/modal';
 import { useApiCall } from '@/hooks/api-call';
 import { TCategory } from '@/types/category';
 import { TProduct } from '@/types/product';
@@ -223,351 +224,345 @@ export function ModalProduct({
 
   if (mode === 'edit' && isLoadingProduct) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-        <div className="w-full max-w-[350px] sm:max-w-[500px] md:max-w-[700px] rounded-lg bg-white p-4">
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="animate-spin text-gray-400" size={32} />
-          </div>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        title="ویرایش محصول"
+        className="max-w-[350px] sm:max-w-[500px] md:max-w-[700px]"
+      >
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="animate-spin text-gray-400" size={32} />
         </div>
-      </div>
+      </Modal>
     );
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="w-full max-w-[350px] sm:max-w-[500px] md:max-w-[700px] lg:max-w-[900px] max-h-[90vh] overflow-y-auto rounded-lg bg-white p-4">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="font-bold text-gray-900">
-            {mode === 'create' ? 'افزودن محصول' : 'ویرایش محصول'}
-          </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-md p-1 text-gray-400 hover:bg-gray-100"
-          >
-            <X size={20} />
-          </button>
-        </div>
-
-        <form
-          onSubmit={form.handleSubmit(handleSubmitForm)}
-          className="flex flex-col gap-4"
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={mode === 'create' ? 'افزودن محصول' : 'ویرایش محصول'}
+      footer={
+        <button
+          type="submit"
+          form="product-form"
+          disabled={isLoadingSubmitBtn}
+          className="flex-1 rounded-lg bg-red px-4 py-3 font-medium text-white disabled:opacity-50"
         >
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div className="md:col-span-2">
-              <Label>تصویر اصلی</Label>
-              <Controller
-                control={form.control}
-                name="image"
-                render={({ field, fieldState }) => (
-                  <InputImage
-                    error={fieldState.error?.message}
-                    onChange={async (file) => {
-                      if (file) {
-                        setImageFile(file);
-                        const base64 = await convertFileToBase64(file);
-                        field.onChange(base64);
-                      } else {
-                        setImageFile(null);
-                        field.onChange('');
-                      }
-                    }}
-                    preview={field.value || undefined}
-                  />
-                )}
-              />
-            </div>
-
-            <div className="md:col-span-2">
-              <Label>گالری تصاویر</Label>
-              <div className="flex flex-col gap-2">
-                {galleryPreviews.map((preview, index) => (
-                  <div key={index} className="flex gap-2">
-                    <div className="flex-1">
-                      <InputImage
-                        onChange={async (file) => {
-                          if (file) {
-                            const newFiles = [...galleryFiles];
-                            newFiles[index] = file;
-                            setGalleryFiles(newFiles);
-                            const base64 = await convertFileToBase64(file);
-                            const newPreviews = [...galleryPreviews];
-                            newPreviews[index] = base64;
-                            setGalleryPreviews(newPreviews);
-                            const currentGallery = form.getValues('gallery');
-                            currentGallery[index] = base64;
-                            form.setValue('gallery', currentGallery);
-                          } else {
-                            const newFiles = [...galleryFiles];
-                            newFiles.splice(index, 1);
-                            setGalleryFiles(newFiles);
-                            const newPreviews = [...galleryPreviews];
-                            newPreviews.splice(index, 1);
-                            setGalleryPreviews(newPreviews);
-                            const currentGallery = form.getValues('gallery');
-                            currentGallery.splice(index, 1);
-                            form.setValue('gallery', currentGallery);
-                          }
-                        }}
-                        preview={preview}
-                      />
-                    </div>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={async () => {
-                    const input = document.createElement('input');
-                    input.type = 'file';
-                    input.accept = 'image/*';
-                    input.onchange = async (e) => {
-                      const file = (e.target as HTMLInputElement).files?.[0];
-                      if (file) {
-                        const base64 = await convertFileToBase64(file);
-                        setGalleryFiles([...galleryFiles, file]);
-                        setGalleryPreviews([...galleryPreviews, base64]);
-                        const currentGallery = form.getValues('gallery');
-                        currentGallery.push(base64);
-                        form.setValue('gallery', currentGallery);
-                      }
-                    };
-                    input.click();
+          {isLoadingSubmitBtn ? (
+            <Loader2 className="mx-auto animate-spin" />
+          ) : mode === 'create' ? (
+            'افزودن محصول'
+          ) : (
+            'ویرایش محصول'
+          )}
+        </button>
+      }
+      className="max-w-[350px] sm:max-w-[500px] md:max-w-[700px] lg:max-w-[900px]"
+    >
+      <form
+        id="product-form"
+        onSubmit={form.handleSubmit(handleSubmitForm)}
+        className="flex flex-col gap-4"
+      >
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="md:col-span-2">
+            <Label>تصویر اصلی</Label>
+            <Controller
+              control={form.control}
+              name="image"
+              render={({ field, fieldState }) => (
+                <InputImage
+                  error={fieldState.error?.message}
+                  onChange={async (file) => {
+                    if (file) {
+                      setImageFile(file);
+                      const base64 = await convertFileToBase64(file);
+                      field.onChange(base64);
+                    } else {
+                      setImageFile(null);
+                      field.onChange('');
+                    }
                   }}
-                  className="rounded-md border bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  افزودن تصویر به گالری
-                </button>
-                {form.formState.errors.gallery && (
-                  <p className="text-sm text-red-500">
-                    {form.formState.errors.gallery.message}
-                  </p>
-                )}
-              </div>
-            </div>
+                  preview={field.value || undefined}
+                />
+              )}
+            />
+          </div>
 
-            <div className="md:col-span-2">
-              <Label>دسته‌بندی</Label>
-              <Controller
-                control={form.control}
-                name="category"
-                render={({ field, fieldState }) => (
-                  <div className="flex flex-col gap-2">
-                    <select
-                      value={field.value.id}
-                      onChange={(e) => {
-                        const selectedCategory = categoriesData?.find(
-                          (cat) => cat.id === Number(e.target.value),
-                        );
-                        if (selectedCategory) {
-                          field.onChange(selectedCategory);
+          <div className="md:col-span-2">
+            <Label>گالری تصاویر</Label>
+            <div className="flex flex-col gap-2">
+              {galleryPreviews.map((preview, index) => (
+                <div key={index} className="flex gap-2">
+                  <div className="flex-1">
+                    <InputImage
+                      onChange={async (file) => {
+                        if (file) {
+                          const newFiles = [...galleryFiles];
+                          newFiles[index] = file;
+                          setGalleryFiles(newFiles);
+                          const base64 = await convertFileToBase64(file);
+                          const newPreviews = [...galleryPreviews];
+                          newPreviews[index] = base64;
+                          setGalleryPreviews(newPreviews);
+                          const currentGallery = form.getValues('gallery');
+                          currentGallery[index] = base64;
+                          form.setValue('gallery', currentGallery);
+                        } else {
+                          const newFiles = [...galleryFiles];
+                          newFiles.splice(index, 1);
+                          setGalleryFiles(newFiles);
+                          const newPreviews = [...galleryPreviews];
+                          newPreviews.splice(index, 1);
+                          setGalleryPreviews(newPreviews);
+                          const currentGallery = form.getValues('gallery');
+                          currentGallery.splice(index, 1);
+                          form.setValue('gallery', currentGallery);
                         }
                       }}
-                      className="w-full rounded-md border border-gray-200 p-[9px] text-sm font-medium text-slate-500 focus:border-red"
-                    >
-                      <option value={0}>انتخاب دسته‌بندی</option>
-                      {categoriesData?.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.name_fa}
-                        </option>
-                      ))}
-                    </select>
-                    {fieldState.error && (
-                      <p className="text-sm text-red-500">
-                        {fieldState.error.message}
-                      </p>
-                    )}
-                  </div>
-                )}
-              />
-            </div>
-
-            <div>
-              <Label>نام فارسی</Label>
-              <Controller
-                control={form.control}
-                name="name_fa"
-                render={({ field, fieldState }) => (
-                  <Input
-                    type="text"
-                    error={fieldState.error?.message}
-                    {...field}
-                  />
-                )}
-              />
-            </div>
-
-            <div>
-              <Label>نام انگلیسی</Label>
-              <Controller
-                control={form.control}
-                name="name_en"
-                render={({ field, fieldState }) => (
-                  <Input
-                    type="text"
-                    error={fieldState.error?.message}
-                    {...field}
-                  />
-                )}
-              />
-            </div>
-
-            <div>
-              <Label>اسلاگ</Label>
-              <Controller
-                control={form.control}
-                name="slug"
-                render={({ field, fieldState }) => (
-                  <Input
-                    type="text"
-                    error={fieldState.error?.message}
-                    {...field}
-                  />
-                )}
-              />
-            </div>
-
-            <div>
-              <Label>موجودی</Label>
-              <Controller
-                control={form.control}
-                name="quantity"
-                render={({ field, fieldState }) => (
-                  <Input
-                    type="number"
-                    error={fieldState.error?.message}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                )}
-              />
-            </div>
-
-            <div>
-              <Label>قیمت</Label>
-              <Controller
-                control={form.control}
-                name="price"
-                render={({ field, fieldState }) => (
-                  <Input
-                    type="number"
-                    error={fieldState.error?.message}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                )}
-              />
-            </div>
-
-            <div>
-              <Label>تخفیف (%)</Label>
-              <Controller
-                control={form.control}
-                name="discount"
-                render={({ field, fieldState }) => (
-                  <Input
-                    type="number"
-                    error={fieldState.error?.message}
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                  />
-                )}
-              />
-            </div>
-
-            <div className="md:col-span-2">
-              <Label>توضیحات</Label>
-              <Controller
-                control={form.control}
-                name="description"
-                render={({ field, fieldState }) => (
-                  <div className="flex flex-col gap-2">
-                    <textarea
-                      {...field}
-                      rows={4}
-                      className="w-full rounded-md border border-gray-200 p-[9px] text-sm font-medium text-slate-500 focus:border-red"
+                      preview={preview}
                     />
-                    {fieldState.error && (
-                      <p className="text-sm text-red-500">
-                        {fieldState.error.message}
-                      </p>
-                    )}
                   </div>
-                )}
-              />
-            </div>
-
-            <div className="md:col-span-2">
-              <Label>ویژگی‌ها</Label>
-              <div className="flex flex-col gap-2">
-                {fields.map((field, index) => (
-                  <div key={field.id} className="flex gap-2">
-                    <div className="flex-1">
-                      <Label>کلید</Label>
-                      <Controller
-                        control={form.control}
-                        name={`property.${index}.key`}
-                        render={({ field: keyField, fieldState }) => (
-                          <Input
-                            type="text"
-                            error={fieldState.error?.message}
-                            {...keyField}
-                          />
-                        )}
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <Label>مقدار</Label>
-                      <Controller
-                        control={form.control}
-                        name={`property.${index}.value`}
-                        render={({ field: valueField, fieldState }) => (
-                          <Input
-                            type="text"
-                            error={fieldState.error?.message}
-                            {...valueField}
-                          />
-                        )}
-                      />
-                    </div>
-                    {fields.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => remove(index)}
-                        className="rounded-md bg-red p-2 text-white"
-                      >
-                        <X size={16} />
-                      </button>
-                    )}
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => append({ key: '', value: '' })}
-                  className="rounded-md border bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  افزودن ویژگی
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-2">
-            <button
-              type="submit"
-              disabled={isLoadingSubmitBtn}
-              className="flex-1 rounded-lg bg-red px-4 py-3 font-medium text-white disabled:opacity-50"
-            >
-              {isLoadingSubmitBtn ? (
-                <Loader2 className="mx-auto animate-spin" />
-              ) : mode === 'create' ? (
-                'افزودن محصول'
-              ) : (
-                'ویرایش محصول'
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={async () => {
+                  const input = document.createElement('input');
+                  input.type = 'file';
+                  input.accept = 'image/*';
+                  input.onchange = async (e) => {
+                    const file = (e.target as HTMLInputElement).files?.[0];
+                    if (file) {
+                      const base64 = await convertFileToBase64(file);
+                      setGalleryFiles([...galleryFiles, file]);
+                      setGalleryPreviews([...galleryPreviews, base64]);
+                      const currentGallery = form.getValues('gallery');
+                      currentGallery.push(base64);
+                      form.setValue('gallery', currentGallery);
+                    }
+                  };
+                  input.click();
+                }}
+                className="rounded-md border bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                افزودن تصویر به گالری
+              </button>
+              {form.formState.errors.gallery && (
+                <p className="text-sm text-red-500">
+                  {form.formState.errors.gallery.message}
+                </p>
               )}
-            </button>
+            </div>
           </div>
-        </form>
-      </div>
-    </div>
+
+          <div className="md:col-span-2">
+            <Label>دسته‌بندی</Label>
+            <Controller
+              control={form.control}
+              name="category"
+              render={({ field, fieldState }) => (
+                <div className="flex flex-col gap-2">
+                  <select
+                    value={field.value.id}
+                    onChange={(e) => {
+                      const selectedCategory = categoriesData?.find(
+                        (cat) => cat.id === Number(e.target.value),
+                      );
+                      if (selectedCategory) {
+                        field.onChange(selectedCategory);
+                      }
+                    }}
+                    className="w-full rounded-md border border-gray-200 p-[9px] text-sm font-medium text-slate-500 focus:border-red"
+                  >
+                    <option value={0}>انتخاب دسته‌بندی</option>
+                    {categoriesData?.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name_fa}
+                      </option>
+                    ))}
+                  </select>
+                  {fieldState.error && (
+                    <p className="text-sm text-red-500">
+                      {fieldState.error.message}
+                    </p>
+                  )}
+                </div>
+              )}
+            />
+          </div>
+
+          <div>
+            <Label>نام فارسی</Label>
+            <Controller
+              control={form.control}
+              name="name_fa"
+              render={({ field, fieldState }) => (
+                <Input
+                  type="text"
+                  error={fieldState.error?.message}
+                  {...field}
+                />
+              )}
+            />
+          </div>
+
+          <div>
+            <Label>نام انگلیسی</Label>
+            <Controller
+              control={form.control}
+              name="name_en"
+              render={({ field, fieldState }) => (
+                <Input
+                  type="text"
+                  error={fieldState.error?.message}
+                  {...field}
+                />
+              )}
+            />
+          </div>
+
+          <div>
+            <Label>اسلاگ</Label>
+            <Controller
+              control={form.control}
+              name="slug"
+              render={({ field, fieldState }) => (
+                <Input
+                  type="text"
+                  error={fieldState.error?.message}
+                  {...field}
+                />
+              )}
+            />
+          </div>
+
+          <div>
+            <Label>موجودی</Label>
+            <Controller
+              control={form.control}
+              name="quantity"
+              render={({ field, fieldState }) => (
+                <Input
+                  type="number"
+                  error={fieldState.error?.message}
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                />
+              )}
+            />
+          </div>
+
+          <div>
+            <Label>قیمت</Label>
+            <Controller
+              control={form.control}
+              name="price"
+              render={({ field, fieldState }) => (
+                <Input
+                  type="number"
+                  error={fieldState.error?.message}
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                />
+              )}
+            />
+          </div>
+
+          <div>
+            <Label>تخفیف (%)</Label>
+            <Controller
+              control={form.control}
+              name="discount"
+              render={({ field, fieldState }) => (
+                <Input
+                  type="number"
+                  error={fieldState.error?.message}
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                />
+              )}
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <Label>توضیحات</Label>
+            <Controller
+              control={form.control}
+              name="description"
+              render={({ field, fieldState }) => (
+                <div className="flex flex-col gap-2">
+                  <textarea
+                    {...field}
+                    rows={4}
+                    className="w-full rounded-md border border-gray-200 p-[9px] text-sm font-medium text-slate-500 focus:border-red"
+                  />
+                  {fieldState.error && (
+                    <p className="text-sm text-red-500">
+                      {fieldState.error.message}
+                    </p>
+                  )}
+                </div>
+              )}
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <Label>ویژگی‌ها</Label>
+            <div className="flex flex-col gap-2">
+              {fields.map((field, index) => (
+                <div key={field.id} className="flex gap-2">
+                  <div className="flex-1">
+                    <Label>کلید</Label>
+                    <Controller
+                      control={form.control}
+                      name={`property.${index}.key`}
+                      render={({ field: keyField, fieldState }) => (
+                        <Input
+                          type="text"
+                          error={fieldState.error?.message}
+                          {...keyField}
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <Label>مقدار</Label>
+                    <Controller
+                      control={form.control}
+                      name={`property.${index}.value`}
+                      render={({ field: valueField, fieldState }) => (
+                        <Input
+                          type="text"
+                          error={fieldState.error?.message}
+                          {...valueField}
+                        />
+                      )}
+                    />
+                  </div>
+                  {fields.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => remove(index)}
+                      className="rounded-md bg-red p-2 text-white"
+                    >
+                      <X size={16} />
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => append({ key: '', value: '' })}
+                className="rounded-md border bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                افزودن ویژگی
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </Modal>
   );
 }
