@@ -1,7 +1,7 @@
 'use client';
 
-import { getAllProducts } from '@/actions/product/get-all-products';
-import { TProduct } from '@/types/product';
+import { getAllBrands } from '@/actions/brand/get-all-brands';
+import { TBrand } from '@/types/brand';
 import { useQuery } from '@tanstack/react-query';
 import {
   createColumnHelper,
@@ -13,21 +13,18 @@ import { Edit, Loader2, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useMemo } from 'react';
 
-const columnHelper = createColumnHelper<TProduct>();
+const columnHelper = createColumnHelper<TBrand>();
 
-interface IListProductsProps {
-  onEditClick?: (productId: number) => void;
-  onDeleteClick?: (productId: number) => void;
+interface IListBrandsProps {
+  onEditClick?: (brandId: number) => void;
+  onDeleteClick?: (brandId: number) => void;
 }
 
-export function ListProducts({
-  onEditClick,
-  onDeleteClick,
-}: IListProductsProps) {
+export function ListBrands({ onEditClick, onDeleteClick }: IListBrandsProps) {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['products'],
+    queryKey: ['brands'],
     queryFn: async () => {
-      const result = await getAllProducts();
+      const result = await getAllBrands();
       if (result.error) throw new Error(result.error);
       return result.data;
     },
@@ -41,7 +38,7 @@ export function ListProducts({
           <div className="relative h-16 w-16 overflow-hidden rounded-md">
             <Image
               src={info.getValue()}
-              alt="product"
+              alt="brand"
               fill
               className="object-cover"
             />
@@ -56,24 +53,8 @@ export function ListProducts({
         header: 'نام انگلیسی',
         cell: (info) => info.getValue(),
       }),
-      columnHelper.accessor('category', {
-        header: 'دسته‌بندی',
-        cell: (info) => info.getValue().name_fa,
-      }),
-      columnHelper.accessor('brand', {
-        header: 'برند',
-        cell: (info) => info.getValue().name_fa,
-      }),
-      columnHelper.accessor('price', {
-        header: 'قیمت',
-        cell: (info) => info.getValue().toLocaleString('fa-IR'),
-      }),
-      columnHelper.accessor('discount', {
-        header: 'تخفیف',
-        cell: (info) => `${info.getValue()}%`,
-      }),
-      columnHelper.accessor('quantity', {
-        header: 'موجودی',
+      columnHelper.accessor('slug', {
+        header: 'اسلاگ',
         cell: (info) => info.getValue(),
       }),
       columnHelper.display({
@@ -117,7 +98,7 @@ export function ListProducts({
   if (error) {
     return (
       <div className="flex items-center justify-center py-12">
-        <p className="text-red-500">خطا در بارگذاری محصولات</p>
+        <p className="text-red-500">خطا در بارگذاری برندها</p>
       </div>
     );
   }
@@ -168,7 +149,7 @@ export function ListProducts({
                   colSpan={columns.length}
                   className="py-12 text-center text-gray-500"
                 >
-                  محصولی یافت نشد
+                  برندی یافت نشد
                 </td>
               </tr>
             )}
@@ -178,3 +159,4 @@ export function ListProducts({
     </div>
   );
 }
+

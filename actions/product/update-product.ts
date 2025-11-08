@@ -7,10 +7,13 @@ export async function updateProduct(
   id: number,
   data: Partial<Omit<TProduct, 'id' | 'created_at' | 'updated_at'>>,
 ) {
-  const { category, ...productData } = data;
+  const { category, brand, ...productData } = data;
   const updateData: any = { ...productData };
   if (category) {
     updateData.category_id = category.id;
+  }
+  if (brand) {
+    updateData.brand_id = brand.id;
   }
 
   const { data: product, error } = await supabaseClient
@@ -20,7 +23,8 @@ export async function updateProduct(
     .select(
       `
       *,
-      category:categories(*)
+      category:categories(*),
+      brand:brands(*)
     `,
     )
     .single();

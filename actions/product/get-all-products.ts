@@ -8,7 +8,8 @@ export async function getAllProducts() {
     .select(
       `
       *,
-      category:categories(*)
+      category:categories(*),
+      brand:brands(*)
     `,
     )
     .order('created_at', { ascending: false });

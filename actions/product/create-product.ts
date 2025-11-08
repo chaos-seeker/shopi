@@ -6,14 +6,15 @@ import { TProduct } from '@/types/product';
 export async function createProduct(
   data: Omit<TProduct, 'id' | 'created_at' | 'updated_at'>,
 ) {
-  const { category, ...productData } = data;
+  const { category, brand, ...productData } = data;
   const { data: product, error } = await supabaseClient
     .from('products')
-    .insert([{ ...productData, category_id: category.id }])
+    .insert([{ ...productData, category_id: category.id, brand_id: brand.id }])
     .select(
       `
       *,
-      category:categories(*)
+      category:categories(*),
+      brand:brands(*)
     `,
     )
     .single();

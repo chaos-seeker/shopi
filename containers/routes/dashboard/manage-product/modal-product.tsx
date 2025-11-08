@@ -1,5 +1,6 @@
 'use client';
 
+import { getAllBrands } from '@/actions/brand/get-all-brands';
 import { getAllCategories } from '@/actions/category/get-all-categories';
 import { createProduct } from '@/actions/product/create-product';
 import { getProduct } from '@/actions/product/get-product';
@@ -9,6 +10,7 @@ import { InputImage } from '@/components/input-image';
 import { Label } from '@/components/label';
 import { Modal } from '@/components/modal';
 import { useApiCall } from '@/hooks/api-call';
+import { TBrand } from '@/types/brand';
 import { TCategory } from '@/types/category';
 import { TProduct } from '@/types/product';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -31,6 +33,15 @@ const formSchema = z.object({
       image: z.string(),
     })
     .refine((val) => val.id > 0, 'دسته‌بندی الزامی است'),
+  brand: z
+    .object({
+      id: z.number(),
+      name_fa: z.string(),
+      name_en: z.string(),
+      slug: z.string(),
+      image: z.string(),
+    })
+    .refine((val) => val.id > 0, 'برند الزامی است'),
   name_fa: z.string().min(1, 'نام فارسی الزامی است'),
   name_en: z.string().min(1, 'نام انگلیسی الزامی است'),
   slug: z.string().min(1, 'اسلاگ الزامی است'),
@@ -77,6 +88,16 @@ export function ModalProduct({
     enabled: isOpen,
   });
 
+  const { data: brandsData } = useQuery({
+    queryKey: ['brands'],
+    queryFn: async () => {
+      const result = await getAllBrands();
+      if (result.error) throw new Error(result.error);
+      return result.data;
+    },
+    enabled: isOpen,
+  });
+
   const { data: productData, isLoading: isLoadingProduct } = useQuery({
     queryKey: ['product', productId],
     queryFn: async () => {
@@ -94,6 +115,13 @@ export function ModalProduct({
       image: '',
       gallery: [],
       category: {
+        id: 0,
+        name_fa: '',
+        name_en: '',
+        slug: '',
+        image: '',
+      },
+      brand: {
         id: 0,
         name_fa: '',
         name_en: '',
@@ -132,6 +160,7 @@ export function ModalProduct({
         image: product.image,
         gallery: product.gallery,
         category: product.category,
+        brand: product.brand,
         name_fa: product.name_fa,
         name_en: product.name_en,
         slug: product.slug,
@@ -176,6 +205,7 @@ export function ModalProduct({
       image: imageUrl,
       gallery: galleryUrls,
       category: data.category as TCategory,
+      brand: data.brand as TBrand,
     };
 
     if (mode === 'create') {
@@ -376,6 +406,42 @@ export function ModalProduct({
                     {categoriesData?.map((category) => (
                       <option key={category.id} value={category.id}>
                         {category.name_fa}
+                      </option>
+                    ))}
+                  </select>
+                  {fieldState.error && (
+                    <p className="text-sm text-red-500">
+                      {fieldState.error.message}
+                    </p>
+                  )}
+                </div>
+              )}
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <Label>برند</Label>
+            <Controller
+              control={form.control}
+              name="brand"
+              render={({ field, fieldState }) => (
+                <div className="flex flex-col gap-2">
+                  <select
+                    value={field.value.id}
+                    onChange={(e) => {
+                      const selectedBrand = brandsData?.find(
+                        (brand) => brand.id === Number(e.target.value),
+                      );
+                      if (selectedBrand) {
+                        field.onChange(selectedBrand);
+                      }
+                    }}
+                    className="w-full rounded-md border border-gray-200 p-[9px] text-sm font-medium text-slate-500 focus:border-red"
+                  >
+                    <option value={0}>انتخاب برند</option>
+                    {brandsData?.map((brand) => (
+                      <option key={brand.id} value={brand.id}>
+                        {brand.name_fa}
                       </option>
                     ))}
                   </select>

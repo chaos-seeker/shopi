@@ -8,7 +8,8 @@ export async function getProduct(id: number) {
     .select(
       `
       *,
-      category:categories(*)
+      category:categories(*),
+      brand:brands(*)
     `,
     )
     .eq('id', id)

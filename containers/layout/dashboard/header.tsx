@@ -11,8 +11,10 @@ export default function Header() {
   const pathname = usePathname();
   const isManageProducts = pathname?.includes('/manage-products');
   const isManageCategories = pathname?.includes('/manage-categories');
+  const isManageBrands = pathname?.includes('/manage-brands');
   const addProductModal = useModal('add-product');
   const addCategoryModal = useModal('add-category');
+  const addBrandModal = useModal('add-brand');
 
   return (
     <header>
@@ -50,6 +52,15 @@ export default function Header() {
                   <p className="text-white">افزودن محصول</p>
                 </button>
               )}
+              {isManageBrands && (
+                <button
+                  type="button"
+                  onClick={() => addBrandModal.show()}
+                  className="bg-red hover:bg-red/90 text-sm flex items-center gap-1.5 rounded-xl px-4 py-2.5 transition-all"
+                >
+                  <p className="text-white">افزودن برند</p>
+                </button>
+              )}
             </div>
           </div>
           <div className="mt-3 flex w-full justify-center border-t px-4 py-4">
@@ -68,6 +79,7 @@ const Tabs = () => {
   const data = [
     { label: 'مدیریت محصولات', href: '/dashboard/manage-products' },
     { label: 'مدیریت دسته‌بندی‌ها', href: '/dashboard/manage-categories' },
+    { label: 'مدیریت برندها', href: '/dashboard/manage-brands' },
     { label: 'مدیریت سفارش‌ها', href: '/dashboard/manage-orders' },
   ];
 

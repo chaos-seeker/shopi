@@ -1,3 +1,4 @@
+import { TBrand } from './brand';
 import { TCategory } from './category';
 
 export type TProduct = {
@@ -5,6 +6,7 @@ export type TProduct = {
   image: string;
   gallery: string[];
   category: TCategory;
+  brand: TBrand;
   name_fa: string;
   name_en: string;
   slug: string;

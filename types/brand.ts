@@ -1,8 +1,9 @@
 export type TBrand = {
   id: number;
-  nameFa: string;
-  nameEn: string;
+  name_fa: string;
+  name_en: string;
+  slug: string;
   image: string;
-  createdAt: Date;
-  updatedAt: Date;
+  created_at: string;
+  updated_at: string;
 };
