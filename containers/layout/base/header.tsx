@@ -231,36 +231,42 @@ const MobileBottomCart = () => {
                       )}
                     </div>
                     <div className="flex">
-                      <del
-                        className={cn(
-                          'absolute bottom-[20px] left-[118px] text-sm text-gray-400',
-                          {
-                            hidden: Boolean(item.discount === 0),
-                          },
-                        )}
-                      >
-                        {item.price.toLocaleString('fa-IR')}
-                      </del>
-                      <p className="absolute bottom-3 left-[100px] -rotate-90 text-[10px] font-bold text-black/40">
-                        تومان
-                      </p>
-                      <p className="absolute bottom-0 left-[120px] text-lg font-bold text-black">
-                        {(
-                          item.price *
-                          (1 - item.discount / 100)
-                        ).toLocaleString('fa-IR')}
-                      </p>
+                      {(() => {
+                        const price = item.price ?? 0;
+                        const discount = item.discount ?? 0;
+                        const priceWithDiscount = price * (1 - discount / 100);
+                        return (
+                          <>
+                            <del
+                              className={cn(
+                                'absolute bottom-[20px] left-[118px] text-sm text-gray-400',
+                                {
+                                  hidden: Boolean(discount === 0),
+                                },
+                              )}
+                            >
+                              {price.toLocaleString('fa-IR')}
+                            </del>
+                            <p className="absolute bottom-3 left-[100px] -rotate-90 text-[10px] font-bold text-black/40">
+                              تومان
+                            </p>
+                            <p className="absolute bottom-0 left-[120px] text-lg font-bold text-black">
+                              {priceWithDiscount.toLocaleString('fa-IR')}
+                            </p>
+                          </>
+                        );
+                      })()}
                     </div>
                     <div
                       className={cn(
                         'absolute bottom-2 left-[210px] flex h-[22px] gap-1 rounded-md bg-red px-2',
                         {
-                          hidden: Boolean(item.discount === 0),
+                          hidden: Boolean((item.discount ?? 0) === 0),
                         },
                       )}
                     >
                       <p className="pt-0.5 text-xsp font-bold text-white">
-                        {item.discount}
+                        {item.discount ?? 0}
                       </p>
                       <p className="pt-1 text-xs font-bold text-white">%</p>
                     </div>
@@ -489,36 +495,43 @@ const DesktopBottomCart = () => {
                         )}
                       </div>
                       <div className="flex">
-                        <del
-                          className={cn(
-                            'absolute bottom-[20px] left-[118px] text-sm text-gray-400',
-                            {
-                              hidden: Boolean(item.discount === 0),
-                            },
-                          )}
-                        >
-                          {item.price.toLocaleString('fa-IR')}
-                        </del>
-                        <p className="absolute bottom-3 left-[100px] -rotate-90 text-[10px] font-bold text-black/40">
-                          تومان
-                        </p>
-                        <p className="absolute bottom-0 left-[120px] text-lg font-bold text-black">
-                          {(
-                            item.price *
-                            (1 - item.discount / 100)
-                          ).toLocaleString('fa-IR')}
-                        </p>
+                        {(() => {
+                          const price = item.price ?? 0;
+                          const discount = item.discount ?? 0;
+                          const priceWithDiscount =
+                            price * (1 - discount / 100);
+                          return (
+                            <>
+                              <del
+                                className={cn(
+                                  'absolute bottom-[20px] left-[118px] text-sm text-gray-400',
+                                  {
+                                    hidden: Boolean(discount === 0),
+                                  },
+                                )}
+                              >
+                                {price.toLocaleString('fa-IR')}
+                              </del>
+                              <p className="absolute bottom-3 left-[100px] -rotate-90 text-[10px] font-bold text-black/40">
+                                تومان
+                              </p>
+                              <p className="absolute bottom-0 left-[120px] text-lg font-bold text-black">
+                                {priceWithDiscount.toLocaleString('fa-IR')}
+                              </p>
+                            </>
+                          );
+                        })()}
                       </div>
                       <div
                         className={cn(
                           'absolute bottom-2 left-[210px] flex h-[22px] gap-1 rounded-md bg-red px-2',
                           {
-                            hidden: Boolean(item.discount === 0),
+                            hidden: Boolean((item.discount ?? 0) === 0),
                           },
                         )}
                       >
                         <p className="pt-0.5 text-xsp font-bold text-white">
-                          {item.discount}
+                          {item.discount ?? 0}
                         </p>
                         <p className="pt-1 text-xs font-bold text-white">%</p>
                       </div>

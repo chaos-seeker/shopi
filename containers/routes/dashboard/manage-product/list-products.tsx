@@ -72,7 +72,7 @@ export function ListProducts({
       }),
       columnHelper.accessor('price', {
         header: 'قیمت',
-        cell: (info) => info.getValue().toLocaleString('fa-IR'),
+        cell: (info) => (info.getValue() ?? 0).toLocaleString('fa-IR'),
       }),
       columnHelper.accessor('discount', {
         header: 'تخفیف',

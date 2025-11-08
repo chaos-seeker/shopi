@@ -14,8 +14,10 @@ interface IProductCardActionsProps {
 }
 
 export function ProductCardPrice({ data }: { data: TProduct }) {
-  const priceWithoutDiscount = data.price;
-  const priceWithDiscount = data.price * (1 - data.discount / 100);
+  const price = data.price ?? 0;
+  const discount = data.discount ?? 0;
+  const priceWithoutDiscount = price;
+  const priceWithDiscount = price * (1 - discount / 100);
   
   return (
     <div>
@@ -30,7 +32,7 @@ export function ProductCardPrice({ data }: { data: TProduct }) {
           تومان
         </p>
         <div className="absolute bottom-9 left-8 flex h-[22px] gap-1 rounded-full rounded-bl-none bg-white px-2">
-          <p className="pt-0.5 font-bold text-red">{data.discount}</p>
+          <p className="pt-0.5 font-bold text-red">{discount}</p>
           <p className="pt-1 text-sm font-bold text-red">%</p>
         </div>
       </div>

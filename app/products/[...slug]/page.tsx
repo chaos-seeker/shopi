@@ -29,8 +29,10 @@ export default async function Page(props: IPageProps) {
 
   const product = result.data as TProduct;
 
-  const priceWithoutDiscount = product.price;
-  const priceWithDiscount = product.price * (1 - product.discount / 100);
+  const price = product.price ?? 0;
+  const discount = product.discount ?? 0;
+  const priceWithoutDiscount = price;
+  const priceWithDiscount = price * (1 - discount / 100);
 
   return (
     <div className="container">
@@ -58,12 +60,12 @@ export default async function Page(props: IPageProps) {
             }}
           />
         </div>
-        <div className="w-full">
+        <div>
           <Title en={product.name_en} fa={product.name_fa} />
           <div className="gap-5 md:flex md:flex-row-reverse">
             <div className="relative z-10 h-fit min-w-[300px] rounded-xl border p-3">
               <Price
-                discount={product.discount}
+                discount={discount}
                 priceWithDiscount={priceWithDiscount}
                 priceWithoutDiscount={priceWithoutDiscount}
               />

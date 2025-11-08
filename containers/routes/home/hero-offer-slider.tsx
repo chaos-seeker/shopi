@@ -2,94 +2,158 @@
 
 import 'swiper/css';
 import 'swiper/css/navigation';
+import { getAllProducts } from '@/actions/product/get-all-products';
+import { ProductCardFooter } from '@/components/product-card-footer';
+import { Skeleton } from '@/components/skeleton';
+import { TProduct } from '@/types/product';
+import { useQuery } from '@tanstack/react-query';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { ProductCardFooter } from '@/components/product-card-footer';
-import { useShuffledArray } from '@/hooks/shuffle-array';
-import { productsData } from '@/resources/products';
-import { TProduct } from '@/types/product';
 import { cn } from '@/utils/cn';
 
 export function HeroOfferSlider() {
-  const shuffledProductsData = useShuffledArray(productsData);
   const swiperRef = useRef<any>(null);
+
+  const { data: products, isLoading } = useQuery({
+    queryKey: ['products'],
+    queryFn: async () => {
+      const result = await getAllProducts();
+      if (result.error) throw new Error(result.error);
+      return result.data || [];
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const shuffledProducts = products
+    ? [...products].sort(() => Math.random() - 0.5).slice(0, 10)
+    : [];
 
   return (
     <section className="group/section relative z-10 col-span-full overflow-hidden xl:col-span-1">
       <div className="bg-white">
-        {/* @ts-ignore - Swiper types incompatibility with React 19 */}
-        <Swiper
-          slidesPerView="auto"
-          spaceBetween={13}
-          ref={swiperRef}
-          autoplay={{
-            delay: 3000,
-            disableOnInteraction: false,
-          }}
-          modules={[Autoplay]}
-          id="hero-offer-slider"
-          breakpoints={{
-            1024: {
-              slidesPerView: 1,
-            },
-          }}
-        >
-          {shuffledProductsData.map((item) => {
-            return (
-              // @ts-ignore - SwiperSlide types incompatibility with React 19
-              <SwiperSlide
-                key={item.id}
-                className="!w-[268px] rounded-xl bg-red xl:size-full xl:!h-[372px] xl:!w-[297px]"
-              >
-                <div className="flex !h-[380px] flex-col items-center justify-center p-5 xl:pb-10">
-                  <NavigationDesktop swiperRef={swiperRef} />
-                  <Timer />
-                  <Link
-                    href={item.path}
-                    className="flex flex-col items-center gap-3"
-                  >
-                    <div className="relative size-[175px] bg-[url('/images/routes/home/hero-offer-slider-wave-bg.svg')] bg-center bg-no-repeat">
-                      <Image src={item.images[0]} alt={item.title.fa} fill />
-                    </div>
-                    <p className="line-clamp-2 font-bold text-white">
-                      {item.title.fa}
-                    </p>
-                  </Link>
-                  <ProductCardFooter
-                    data={item}
-                    type="offer-slider"
-                    priceComponent={<OfferSliderCardPrice item={item} />}
-                  />
-                </div>
-              </SwiperSlide>
-            );
-          })}
-        </Swiper>
+        {isLoading ? (
+          <HeroOfferSliderSkeleton />
+        ) : (
+          // @ts-ignore - Swiper types incompatibility with React 19
+          <Swiper
+            slidesPerView="auto"
+            spaceBetween={13}
+            ref={swiperRef}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
+            modules={[Autoplay]}
+            id="hero-offer-slider"
+            breakpoints={{
+              1024: {
+                slidesPerView: 1,
+              },
+            }}
+          >
+            {shuffledProducts.map((item) => {
+              return (
+                // @ts-ignore - SwiperSlide types incompatibility with React 19
+                <SwiperSlide
+                  key={item.id}
+                  className="!w-[268px] rounded-xl bg-red xl:size-full xl:!h-[372px] xl:!w-[297px]"
+                >
+                  <div className="flex !h-[380px] flex-col items-center justify-center p-5 xl:pb-10">
+                    <NavigationDesktop swiperRef={swiperRef} />
+                    <Timer />
+                    <Link
+                      href={`/products/${item.slug}`}
+                      className="flex flex-col items-center gap-3"
+                    >
+                      <div className="relative size-[175px] bg-[url('/images/routes/home/hero-offer-slider-wave-bg.svg')] bg-center bg-no-repeat">
+                        {item.gallery && item.gallery.length > 0 && (
+                          <Image
+                            src={item.gallery[0]}
+                            alt={item.name_fa}
+                            fill
+                          />
+                        )}
+                      </div>
+                      <p className="line-clamp-2 font-bold text-white">
+                        {item.name_fa}
+                      </p>
+                    </Link>
+                    <ProductCardFooter
+                      data={item}
+                      type="offer-slider"
+                      priceComponent={<OfferSliderCardPrice item={item} />}
+                    />
+                  </div>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+        )}
       </div>
-      <NavigationMobile swiperRef={swiperRef} />
+      {!isLoading && <NavigationMobile swiperRef={swiperRef} />}
     </section>
   );
 }
 
+function HeroOfferSliderSkeleton() {
+  return (
+    // @ts-ignore - Swiper types incompatibility with React 19
+    <Swiper
+      slidesPerView="auto"
+      spaceBetween={13}
+      modules={[Autoplay]}
+      id="hero-offer-slider-skeleton"
+      breakpoints={{
+        1024: {
+          slidesPerView: 1,
+        },
+      }}
+    >
+      {Array.from({ length: 3 }).map((_, index) => (
+        // @ts-ignore - SwiperSlide types incompatibility with React 19
+        <SwiperSlide
+          key={index}
+          className="!w-[268px] rounded-xl bg-red xl:size-full xl:!h-[372px] xl:!w-[297px]"
+        >
+          <div className="flex !h-[380px] flex-col items-center justify-center p-5 xl:pb-10">
+            <div className="relative size-[175px] bg-[url('/images/routes/home/hero-offer-slider-wave-bg.svg')] bg-center bg-no-repeat">
+              <Skeleton className="size-full rounded-md" />
+            </div>
+            <Skeleton className="mt-3 h-5 w-32" />
+            <div className="absolute bottom-20 left-8">
+              <Skeleton className="h-8 w-24" />
+            </div>
+          </div>
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  );
+}
+
 function OfferSliderCardPrice({ item }: { item: TProduct }) {
+  const price = item.price ?? 0;
+  const discount = item.discount ?? 0;
+  const priceWithoutDiscount = price;
+  const priceWithDiscount = price * (1 - discount / 100);
+  
   return (
     <div>
       <del className="absolute bottom-8 left-20 text-smp text-gray-50">
-        {item.priceWithDiscount.toLocaleString('fa-IR')}
+        {priceWithDiscount.toLocaleString('fa-IR')}
       </del>
       <div>
         <p className="absolute bottom-1 left-8 text-2xl font-bold text-white">
-          {item.priceWithoutDiscount.toLocaleString('fa-IR')}
+          {priceWithoutDiscount.toLocaleString('fa-IR')}
         </p>
         <p className="absolute bottom-5 left-2 -rotate-90 text-xs font-bold text-white">
           تومان
         </p>
         <div className="absolute bottom-9 left-8 flex h-[22px] gap-1 rounded-full rounded-bl-none bg-white px-2">
-          <p className="pt-0.5 font-bold text-red">{item.discount}</p>
+          <p className="pt-0.5 font-bold text-red">{discount}</p>
           <p className="pt-1 text-sm font-bold text-red">%</p>
         </div>
       </div>

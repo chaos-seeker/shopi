@@ -12,11 +12,12 @@ export const cartSlice = slice({
     isOne: (value, payload: TProduct) =>
       value.find((product) => product.id === payload.id)?.quantity === 1,
     totalPrice: (value) =>
-      value.reduce(
-        (acc, product) =>
-          acc + product.price * (1 - product.discount / 100) * product.quantity,
-        0,
-      ),
+      value.reduce((acc, product) => {
+        const price = product.price ?? 0;
+        const discount = product.discount ?? 0;
+        const quantity = product.quantity ?? 0;
+        return acc + price * (1 - discount / 100) * quantity;
+      }, 0),
     totalItems: (value) =>
       value.reduce((acc, product) => acc + product.quantity, 0),
     quantity: (value, payload: TProduct) => {
