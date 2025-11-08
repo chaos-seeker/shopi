@@ -1,5 +1,6 @@
 'use client';
 
+import { createOrder } from '@/actions/order/create-order';
 import { ToggleSection } from '@/components/toggle-section';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
 import { cartSlice } from '@/slices/cart';
@@ -19,6 +20,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { ThreeDots } from 'react-loader-spinner';
 
 export function Header() {
@@ -150,6 +152,52 @@ const MobileBottomSearch = () => {
 const MobileBottomCart = () => {
   const mobileCartToggleUrlState = useToggleUrlState('mobile-cart');
   const localstorageCart = useKillua(cartSlice);
+  const user = useKillua(userSlice);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleCheckout = async (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    const userData = user.get();
+    if (!userData) {
+      toast.error('لطفا وارد حساب کاربری خود شوید');
+      mobileCartToggleUrlState.hide();
+      return;
+    }
+
+    const cartItems = localstorageCart.get();
+    if (cartItems.length === 0) {
+      toast.error('سبد خرید شما خالی است');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const totalPrice = localstorageCart.selectors.totalPrice();
+      const totalDiscount = localstorageCart.selectors.totalDiscount();
+      const roundedDiscount = Math.round(totalDiscount * 100) / 100;
+      const discount = roundedDiscount > 999.99 ? 0 : roundedDiscount;
+      const result = await createOrder({
+        user: userData,
+        amount: Math.round(totalPrice * 100) / 100,
+        discount,
+      });
+
+      if (result.error) {
+        toast.error(result.error);
+        setIsSubmitting(false);
+        return;
+      }
+
+      toast.success('سفارش با موفقیت ثبت شد');
+      localstorageCart.set([]);
+      mobileCartToggleUrlState.hide();
+      setIsSubmitting(false);
+    } catch {
+      toast.error('خطایی در ثبت سفارش رخ داد');
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="flex items-center">
@@ -286,13 +334,13 @@ const MobileBottomCart = () => {
                   تومان
                 </p>
               </div>
-              <Link
-                href="/checkout"
-                className="ml-4 rounded-lg bg-red px-4 py-2 text-white"
-                onClick={() => mobileCartToggleUrlState.hide()}
+              <button
+                onClick={handleCheckout}
+                disabled={isSubmitting}
+                className="ml-4 rounded-lg bg-red px-4 py-2 text-white disabled:opacity-50"
               >
-                ثبت سفارش
-              </Link>
+                {isSubmitting ? 'در حال ثبت...' : 'ثبت سفارش'}
+              </button>
             </div>
           </div>
         )}
@@ -404,6 +452,54 @@ const DesktopBottom = () => {
 const DesktopBottomCart = () => {
   const desktopCartToggleUrlState = useToggleUrlState('desktop-cart');
   const localstorageCart = useKillua(cartSlice);
+  const user = useKillua(userSlice);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleCheckout = async (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    const userData = user.get();
+    if (!userData) {
+      toast.error('لطفا وارد حساب کاربری خود شوید');
+      desktopCartToggleUrlState.hide();
+      return;
+    }
+
+    const cartItems = localstorageCart.get();
+    if (cartItems.length === 0) {
+      toast.error('سبد خرید شما خالی است');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const totalPrice = localstorageCart.selectors.totalPrice();
+      const totalDiscount = localstorageCart.selectors.totalDiscount();
+      // Round amounts to 2 decimal places and limit discount to 999.99 (DECIMAL(5,2) max)
+      // If discount exceeds limit, set to 0 since discounts are already applied in amount
+      const roundedDiscount = Math.round(totalDiscount * 100) / 100;
+      const discount = roundedDiscount > 999.99 ? 0 : roundedDiscount;
+      const result = await createOrder({
+        user: userData,
+        amount: Math.round(totalPrice * 100) / 100,
+        discount,
+      });
+
+      if (result.error) {
+        toast.error(result.error);
+        setIsSubmitting(false);
+        return;
+      }
+
+      toast.success('سفارش با موفقیت ثبت شد');
+      localstorageCart.set([]);
+      desktopCartToggleUrlState.hide();
+      setIsSubmitting(false);
+    } catch {
+      toast.error('خطایی در ثبت سفارش رخ داد');
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div
@@ -551,13 +647,13 @@ const DesktopBottomCart = () => {
                     تومان
                   </p>
                 </div>
-                <Link
-                  href="/checkout"
-                  className="ml-4 rounded-lg bg-red px-4 py-2 text-white"
-                  onClick={() => desktopCartToggleUrlState.hide()}
+                <button
+                  onClick={handleCheckout}
+                  disabled={isSubmitting}
+                  className="ml-4 rounded-lg bg-red px-4 py-2 text-white disabled:opacity-50"
                 >
-                  ثبت سفارش
-                </Link>
+                  {isSubmitting ? 'در حال ثبت...' : 'ثبت سفارش'}
+                </button>
               </div>
             </div>
           )}
