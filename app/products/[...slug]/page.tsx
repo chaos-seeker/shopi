@@ -46,7 +46,7 @@ export default async function Page(props: IPageProps) {
         />
         <span className="h-px grow bg-[#e6e9ee]" />
       </div>
-      <div className="gap-5 xl:flex">
+      <div className="gap-5 xl:flex w-full">
         <div className="flex flex-col gap-3">
           <Images
             images={product.gallery}
@@ -60,7 +60,7 @@ export default async function Page(props: IPageProps) {
             }}
           />
         </div>
-        <div>
+        <div className="w-full">
           <Title en={product.name_en} fa={product.name_fa} />
           <div className="gap-5 md:flex md:flex-row-reverse">
             <div className="relative z-10 h-fit min-w-[300px] rounded-xl border p-3">

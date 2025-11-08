@@ -49,7 +49,7 @@ export function Price(props: IPriceProps) {
           <p className="text-2xl font-bold text-black">
             {props.priceWithDiscount.toLocaleString('fa-IR')}
           </p>
-          <p className="relative -left-15 top-4 -rotate-90 text-[10px] font-bold text-gray-500">
+          <p className="relative -left-14 top-4 -rotate-90 text-[10px] font-bold text-gray-500">
             تومان
           </p>
         </div>
