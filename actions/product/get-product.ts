@@ -18,4 +18,3 @@ export async function getProduct(id: number) {
   if (error) return { error: error.message };
   return { data: product };
 }
-

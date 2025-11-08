@@ -85,13 +85,7 @@ export default [
       'better-tailwindcss/no-unregistered-classes': [
         'error',
         {
-          ignore: [
-            '^_',
-            'pagination',
-            'scrollbar-hide',
-            'show',
-            'hide',
-          ],
+          ignore: ['^_', 'pagination', 'scrollbar-hide', 'show', 'hide'],
         },
       ],
 

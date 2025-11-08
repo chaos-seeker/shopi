@@ -18,4 +18,3 @@ export async function getProductBySlug(slug: string) {
   if (error) return { error: error.message };
   return { data: product };
 }
-

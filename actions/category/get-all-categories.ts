@@ -11,4 +11,3 @@ export async function getAllCategories() {
   if (error) return { error: error.message };
   return { data: categories || [] };
 }
-

@@ -5,4 +5,3 @@ import { ListOrders } from '@/containers/routes/dashboard/manage-orders/list-ord
 export default function Page() {
   return <ListOrders />;
 }
-

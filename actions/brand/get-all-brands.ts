@@ -11,4 +11,3 @@ export async function getAllBrands() {
   if (error) return { error: error.message };
   return { data: brands || [] };
 }
-

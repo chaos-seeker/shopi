@@ -8,4 +8,3 @@ export async function deleteBrand(id: number) {
   if (error) return { error: error.message };
   return { data: { id } };
 }
-

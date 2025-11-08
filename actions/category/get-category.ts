@@ -12,4 +12,3 @@ export async function getCategory(id: number) {
   if (error) return { error: error.message };
   return { data: category };
 }
-

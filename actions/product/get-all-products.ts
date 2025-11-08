@@ -17,4 +17,3 @@ export async function getAllProducts() {
   if (error) return { error: error.message };
   return { data: products };
 }
-

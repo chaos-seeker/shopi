@@ -11,4 +11,3 @@ export async function deleteCategory(id: number) {
   if (error) return { error: error.message };
   return { data: { id } };
 }
-

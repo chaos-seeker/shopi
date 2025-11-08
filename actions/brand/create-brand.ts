@@ -15,4 +15,3 @@ export async function createBrand(
   if (error) return { error: error.message };
   return { data: brand };
 }
-

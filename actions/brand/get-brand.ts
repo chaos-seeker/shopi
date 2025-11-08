@@ -12,4 +12,3 @@ export async function getBrand(id: number) {
   if (error) return { error: error.message };
   return { data: brand };
 }
-

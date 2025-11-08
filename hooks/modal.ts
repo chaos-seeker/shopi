@@ -39,4 +39,3 @@ export function useModal(key: string): Return {
     hide,
   };
 }
-

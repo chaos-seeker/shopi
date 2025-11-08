@@ -159,4 +159,3 @@ export function ListBrands({ onEditClick, onDeleteClick }: IListBrandsProps) {
     </div>
   );
 }
-

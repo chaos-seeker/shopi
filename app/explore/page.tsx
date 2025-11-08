@@ -8,19 +8,20 @@ import { Products } from '@/containers/routes/explore/products';
 import { Sort } from '@/containers/routes/explore/sort';
 
 interface PageProps {
-  searchParams: {
+  searchParams: Promise<{
     text?: string;
     sort?: 'newest' | 'highest' | 'lowest';
     category?: string;
     brand?: string;
-  };
+  }>;
 }
 
 export default async function Page({ searchParams }: PageProps) {
-  const text = searchParams.text || '';
-  const sort = searchParams.sort || 'newest';
-  const filterCategory = searchParams['category'] || '';
-  const filterBrand = searchParams['brand'] || '';
+  const params = await searchParams;
+  const text = params.text || '';
+  const sort = params.sort || 'newest';
+  const filterCategory = params['category'] || '';
+  const filterBrand = params['brand'] || '';
 
   const categorySlugs = filterCategory?.split(',').filter(Boolean) || [];
   const brandSlugs = filterBrand?.split(',').filter(Boolean) || [];

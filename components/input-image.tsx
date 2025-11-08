@@ -20,7 +20,9 @@ interface IInputImageProps
 
 export const InputImage = forwardRef<HTMLInputElement, IInputImageProps>(
   ({ className, error, onChange, preview: initialPreview, ...props }, ref) => {
-    const [preview, setPreview] = useState<string | null>(initialPreview || null);
+    const [preview, setPreview] = useState<string | null>(
+      initialPreview || null,
+    );
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -98,9 +100,7 @@ export const InputImage = forwardRef<HTMLInputElement, IInputImageProps>(
             <p className="text-sm font-medium text-gray-600">
               کلیک کنید یا تصویر را بکشید
             </p>
-            <p className="mt-1 text-xs text-gray-400">
-              PNG, JPG, GIF تا 10MB
-            </p>
+            <p className="mt-1 text-xs text-gray-400">PNG, JPG, GIF تا 10MB</p>
           </label>
         )}
         {error && <p className="text-sm text-red-500">{error}</p>}
@@ -110,4 +110,3 @@ export const InputImage = forwardRef<HTMLInputElement, IInputImageProps>(
 );
 
 InputImage.displayName = 'InputImage';
-
