@@ -15,7 +15,6 @@ export function CheckboxAccordions() {
   return (
     <div className="lg:relative">
       <div className="sticky top-3 flex  flex-col gap-3 overflow-y-auto">
-        {/* desktop */}
           <div className="hidden min-w-64 lg:block">
             <div className="flex flex-col gap-3">
               <CheckboxsAccordion
@@ -23,7 +22,6 @@ export function CheckboxAccordions() {
             </div>
           </div>
       </div>
-      {/* mobile */}
       <ToggleSection
         title="فیلتر"
         isShow={filterToggleUrlState.isShow}
@@ -51,7 +49,6 @@ const CheckboxsAccordion = () => {
 
   return (
     <section className="rounded-lg border lg:rounded-xl">
-      {/* head */}
       <button
         onClick={() => setIsShow((prev) => !prev)}
         className="flex w-full items-center justify-between p-2.5 text-smp font-medium"
@@ -64,7 +61,6 @@ const CheckboxsAccordion = () => {
           })}
         />
       </button>
-      {/* body */}
       <div
         className={cn('h-0 opacity-0 transition-all overflow-hidden', {
           'h-auto opacity-100': isShow,

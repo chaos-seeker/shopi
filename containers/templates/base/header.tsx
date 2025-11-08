@@ -88,7 +88,6 @@ const MobileBottomSearch = () => {
 
   return (
     <div>
-      {/* field */}
       <div className="flex items-center">
         <Link href="/shop">
           <Search size={20} />
@@ -102,7 +101,6 @@ const MobileBottomSearch = () => {
           onChange={(e) => setSearchValue(e.target.value)}
         />
       </div>
-      {/* section */}
       <div
         className={cn(
           'absolute z-50 left-0 h-4 w-screen transition-all top-[110px]',
@@ -152,7 +150,6 @@ const MobileBottomCart = () => {
 
   return (
     <div className="flex items-center">
-      {/* btn */}
       <button
         onClick={() => mobileCartToggleUrlState.show()}
         className="relative pr-1.5"
@@ -162,7 +159,6 @@ const MobileBottomCart = () => {
           {localstorageCart.selectors.totalItems()}
         </p>
       </button>
-      {/* section */}
       <ToggleSection
         title="سبد خرید"
         isShow={mobileCartToggleUrlState.isShow}
@@ -181,20 +177,17 @@ const MobileBottomCart = () => {
           </div>
         ) : (
           <div>
-            {/** cart items */}
             {localstorageCart.get().map((item) => (
               <div
                 key={item.id}
                 className="relative mt-3 flex items-center gap-5 px-3"
               >
-                {/* remove btn */}
                 <button
                   className="absolute top-0 rounded-md bg-red p-[3px]"
                   onClick={() => localstorageCart.reducers.remove(item)}
                 >
                   <X size={15} className="stroke-white" />
                 </button>
-                {/* image */}
                 <Image
                   alt={item.title.fa}
                   src={item.images[0]}
@@ -202,10 +195,8 @@ const MobileBottomCart = () => {
                   height={60}
                 />
                 <div className="mb-4 w-full">
-                  {/* title */}
                   <p className="mb-2 text-smp font-bold">{item.title.fa}</p>
                   <div className="relative flex flex-col items-end">
-                    {/* increment btn / decrement btn / remove btn */}
                     <div className="flex w-24 justify-between rounded-lg border bg-white px-3 py-1.5 font-bold text-gray-700">
                       <button
                         onClick={() =>
@@ -232,7 +223,6 @@ const MobileBottomCart = () => {
                         </button>
                       )}
                     </div>
-                    {/* price */}
                     <div className="flex">
                       <del
                         className={cn(
@@ -251,7 +241,6 @@ const MobileBottomCart = () => {
                         {item.priceWithDiscount.toLocaleString('fa-IR')}
                       </p>
                     </div>
-                    {/* discount */}
                     <div
                       className={cn(
                         'absolute bottom-2 left-[210px] flex h-[22px] gap-1 rounded-md bg-red px-2',
@@ -269,7 +258,6 @@ const MobileBottomCart = () => {
                 </div>
               </div>
             ))}
-            {/** total price / place order */}
             <div className="flex items-center justify-between border-t py-3">
               <div className="relative flex w-fit flex-col px-4">
                 <p className="text-xsp font-bold">مبلغ قابل پرداخت</p>
@@ -386,7 +374,6 @@ const DesktopBottom = () => {
         <DesktopBottomCart />
       </div>
       <div className="ml-48 flex gap-4">
-        {/* search */}
         <DesktopBottomSearch />
       </div>
     </div>
@@ -403,7 +390,6 @@ const DesktopBottomCart = () => {
       onMouseEnter={() => desktopCartToggleUrlState.show()}
       onMouseLeave={() => desktopCartToggleUrlState.hide()}
     >
-      {/* btn */}
       <button className="flex items-center justify-between gap-3 rounded-xl border p-3.5">
         <div className="flex items-center gap-2">
           <ShoppingCart className="text-gray-700" size={24} />
@@ -413,7 +399,6 @@ const DesktopBottomCart = () => {
           {localstorageCart.selectors.totalItems()}
         </p>
       </button>
-      {/* section */}
       <div
         className={cn(
           'absolute z-50 right-0 top-[70px] w-[400px] transition-all',
@@ -436,20 +421,17 @@ const DesktopBottomCart = () => {
             </div>
           ) : (
             <div>
-              {/** cart items */}
               {localstorageCart.get().map((item) => (
                 <div
                   key={item.id}
                   className="relative mt-3 flex items-center gap-5 px-3"
                 >
-                  {/* remove btn */}
                   <button
                     className="absolute top-0 rounded-md bg-red p-[3px]"
                     onClick={() => localstorageCart.reducers.remove(item)}
                   >
                     <X size={15} className="stroke-white" />
                   </button>
-                  {/* image */}
                   <Image
                     alt={item.title.fa}
                     src={item.images[0]}
@@ -457,10 +439,8 @@ const DesktopBottomCart = () => {
                     height={60}
                   />
                   <div className="mb-4 w-full">
-                    {/* title */}
                     <p className="mb-2 text-smp font-bold">{item.title.fa}</p>
                     <div className="relative flex flex-col items-end">
-                      {/* increment btn / decrement btn / remove btn */}
                       <div className="flex w-24 justify-between rounded-lg border bg-white px-3 py-1.5 font-bold text-gray-700">
                         <button
                           onClick={() =>
@@ -489,7 +469,6 @@ const DesktopBottomCart = () => {
                           </button>
                         )}
                       </div>
-                      {/* price */}
                       <div className="flex">
                         <del
                           className={cn(
@@ -508,7 +487,6 @@ const DesktopBottomCart = () => {
                           {item.priceWithDiscount.toLocaleString('fa-IR')}
                         </p>
                       </div>
-                      {/* discount */}
                       <div
                         className={cn(
                           'absolute bottom-2 left-[210px] flex h-[22px] gap-1 rounded-md bg-red px-2',
@@ -526,7 +504,6 @@ const DesktopBottomCart = () => {
                   </div>
                 </div>
               ))}
-              {/** total price / place order */}
               <div className="flex items-center justify-between border-t py-3">
                 <div className="relative flex w-fit flex-col px-4">
                   <p className="text-xsp font-bold">مبلغ قابل پرداخت</p>
@@ -561,7 +538,6 @@ const DesktopBottomSearch = () => {
 
   return (
     <div className="relative w-72">
-      {/* field */}
       <div className="flex w-full items-center justify-between rounded-2xl border border-gray-100 bg-gray p-4 transition-all focus-within:border-gray-200 focus-within:bg-white">
         <input
           className="bg-transparent text-xsp font-bold"
@@ -575,7 +551,6 @@ const DesktopBottomSearch = () => {
           <Search size={20} className="text-gray-400" />
         </Link>
       </div>
-      {/* section */}
       <div
         className={cn(
           'absolute z-50 left-0 top-[70px] h-4 w-full transition-all',

@@ -22,7 +22,6 @@ export function Images(props: IImagesProps) {
 
   return (
     <section className="flex flex-col xl:max-w-[382px]">
-      {/* main image */}
       <div className="my-3 flex w-full justify-center">
         <Swiper
           ref={swiperImageMainRef}
@@ -50,7 +49,6 @@ export function Images(props: IImagesProps) {
           ))}
         </Swiper>
       </div>
-      {/* images */}
       <div className="flex justify-center">
         <Swiper
           slidesPerView="auto"

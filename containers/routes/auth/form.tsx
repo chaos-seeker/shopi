@@ -52,7 +52,6 @@ const FormLogin = () => {
 
   return (
     <section className="flex w-[300px] flex-col gap-5 rounded-xl border bg-white p-4 sm:w-[350px]">
-      {/* head */}
       <div className="flex items-center justify-between">
         <p className="font-bold text-gray-500">ورود / ثبت نام</p>
         <Image
@@ -62,14 +61,11 @@ const FormLogin = () => {
           height={25}
         />
       </div>
-      {/* body */}
       <form
         onSubmit={form.handleSubmit(handleSubmitForm)}
         className="flex flex-col gap-2"
       >
-        {/* fields */}
         <div className="flex flex-col gap-2.5">
-          {/* phone number */}
           <div className="flex flex-col gap-2">
             <input
               id="feild-phone-number"
@@ -89,7 +85,6 @@ const FormLogin = () => {
             </p>
           </div>
         </div>
-        {/* submit */}
         <button
           disabled={isLoadingSubmitBtn}
           className="mt-1 h-12 w-full justify-center rounded-lg bg-red font-medium text-white disabled:opacity-50"
@@ -102,11 +97,9 @@ const FormLogin = () => {
 };
 
 const FormVerification = () => {
-  // callApiSubmitBtn
   const [, setNuqsForm] = useQueryState('form');
   const [, isLoadingSubmitBtn] = useApiCall();
   const formSchema = z.object({
-    // length 4
     otpCode: z.string().regex(new RegExp(/^\d{4}$/), {
       message: 'کد وارد شده معتبر نیست!',
     }),
@@ -118,7 +111,6 @@ const FormVerification = () => {
     },
   });
   const handleSubmitForm = async () => {
-    // ...
   };
   const handleBackBtn = () => {
     setNuqsForm('login');
@@ -126,7 +118,6 @@ const FormVerification = () => {
 
   return (
     <section className="flex w-[300px] flex-col gap-5 rounded-xl border bg-white p-4 sm:w-[350px]">
-      {/* head */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
@@ -144,14 +135,11 @@ const FormVerification = () => {
           height={25}
         />
       </div>
-      {/* body */}
       <form
         onSubmit={form.handleSubmit(handleSubmitForm)}
         className="flex flex-col gap-2"
       >
-        {/* fields */}
         <div className="flex flex-col gap-2.5">
-          {/* otp code */}
           <div className="flex flex-col gap-2">
             <div dir="ltr">
               <OtpInput
@@ -181,7 +169,6 @@ const FormVerification = () => {
             </p>
           </div>
         </div>
-        {/* submit */}
         <button
           disabled={isLoadingSubmitBtn}
           className="mt-1 h-12 w-full justify-center rounded-lg bg-red font-medium text-white disabled:opacity-50"

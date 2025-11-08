@@ -18,7 +18,6 @@ const Info = () => {
   return (
     <div className="relative border-t pb-3 pt-5">
       <div className="flex flex-col gap-4 sm:ml-20 md:flex-row">
-        {/* logo 1 */}
         <Link href="/">
           <Image
             src="/images/templates/base/footer-logo-1.svg"
@@ -27,14 +26,12 @@ const Info = () => {
             height={50}
           />
         </Link>
-        {/* info */}
         <p className="max-w-sm text-sm font-medium text-gray-400 lg:max-w-md">
           یک خرید اینترنتی مطمئن، نیازمند فروشگاهی است که بتواند کالاهایی متنوع،
           باکیفیت و دارای قیمت مناسب را در مدت زمان ی کوتاه به دست مشتریان خود
           برساند و ضمانت بازگشت کالا هم داشته باشد.
         </p>
       </div>
-      {/* logo 2 */}
       <div>
         <Link href="/">
           <Image

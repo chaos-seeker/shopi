@@ -23,7 +23,6 @@ export function ProductSlider(props: IProductSliderProps) {
 
   return (
     <section className="group/section container relative z-10 col-span-full flex flex-col gap-5 overflow-hidden">
-      {/* head */}
       <div className="flex items-center gap-3">
         <h2 className="text-lg font-bold text-gray-600">{props.title}</h2>
         <span className="h-px grow bg-[#e6e9ee]" />
@@ -35,9 +34,7 @@ export function ProductSlider(props: IProductSliderProps) {
           <ChevronLeft className="size-4" />
         </Link>
       </div>
-      {/* body */}
       <div>
-        {/* slider */}
         <div className="bg-white">
           {/* @ts-ignore - Swiper types incompatibility with React 19 */}
           <Swiper

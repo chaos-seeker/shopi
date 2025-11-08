@@ -20,7 +20,6 @@ export function HeroOfferSlider() {
 
   return (
     <section className="group/section relative z-10 col-span-full overflow-hidden xl:col-span-1">
-      {/* slider */}
       <div className="bg-white">
         {/* @ts-ignore - Swiper types incompatibility with React 19 */}
         <Swiper
@@ -47,11 +46,8 @@ export function HeroOfferSlider() {
                 className="!w-[268px] rounded-xl bg-red xl:size-full xl:!h-[372px] xl:!w-[297px]"
               >
                 <div className="flex !h-[380px] flex-col items-center justify-center p-5 xl:pb-10">
-                  {/* navigation - desktop */}
                   <NavigationDesktop swiperRef={swiperRef} />
-                  {/* timer */}
                   <Timer />
-                  {/* image / title */}
                   <Link
                     href={item.path}
                     className="flex flex-col items-center gap-3"
@@ -63,7 +59,6 @@ export function HeroOfferSlider() {
                       {item.title.fa}
                     </p>
                   </Link>
-                  {/* price/actions */}
                   <ProductCardFooter
                     data={item}
                     type="offer-slider"
@@ -147,7 +142,6 @@ const NavigationMobile = (props: INavigationProps) => {
 };
 
 const Timer = () => {
-  // countdown timer
   const [timeLeftFromDay, setTimeLeftFromDay] = useState([0, 0, 0]);
   useEffect(() => {
     const interval = setInterval(() => {

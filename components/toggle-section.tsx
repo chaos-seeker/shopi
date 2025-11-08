@@ -13,7 +13,6 @@ interface IToggleSectionProps {
 }
 
 export function ToggleSection(props: IToggleSectionProps) {
-  // close tooltip when clicking outside
   const sectionRef = useRef<HTMLDivElement | null>(null);
   useOnClickOutside(sectionRef as RefObject<HTMLElement>, () => {
     props.onClose();
@@ -21,7 +20,6 @@ export function ToggleSection(props: IToggleSectionProps) {
 
   return (
     <div>
-      {/* backdrop */}
       <div
         className={cn('fixed inset-0 z-40 transition-all', {
           show: props.isShow,
@@ -30,7 +28,6 @@ export function ToggleSection(props: IToggleSectionProps) {
           hidden: !props.isBackDrop,
         })}
       />
-      {/* section */}
       <div
         ref={sectionRef}
         className={cn('transition-all  relative z-50', props.className, {
@@ -40,7 +37,6 @@ export function ToggleSection(props: IToggleSectionProps) {
       >
         <div className="container">
           <div className="rounded-md border bg-white">
-            {/* head */}
             <div className="flex items-center justify-between border-b p-2">
               <p className="text-smp font-bold">{props.title}</p>
               <button
@@ -50,7 +46,6 @@ export function ToggleSection(props: IToggleSectionProps) {
                 <X size={20} className="stroke-white" />
               </button>
             </div>
-            {/* body */}
             <div>{props.children}</div>
           </div>
         </div>
