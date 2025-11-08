@@ -3,7 +3,9 @@
 import { auth } from '@/actions/auth/auth';
 import { Input } from '@/components/input';
 import { useApiCall } from '@/hooks/api-call';
+import { userSlice } from '@/slices/user';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useKillua } from 'killua';
 import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -23,6 +25,7 @@ const formSchema = z.object({
 export function Form() {
   const router = useRouter();
   const [callApi, isLoadingSubmitBtn] = useApiCall();
+  const user = useKillua(userSlice);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,6 +42,7 @@ export function Form() {
         toast.error(authResult.error!);
         return;
       }
+      user.set(authResult.user);
       toast.success(
         authResult.status === 'registered'
           ? 'ثبت نام با موفقیت انجام شد'

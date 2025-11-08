@@ -1,5 +1,5 @@
-import { slice } from 'killua';
 import { TProduct } from '@/types/product';
+import { slice } from 'killua';
 
 export const cartSlice = slice({
   key: 'cart',
@@ -13,7 +13,8 @@ export const cartSlice = slice({
       value.find((product) => product.id === payload.id)?.quantity === 1,
     totalPrice: (value) =>
       value.reduce(
-        (acc, product) => acc + product.priceWithDiscount * product.quantity,
+        (acc, product) =>
+          acc + product.price * (1 - product.discount / 100) * product.quantity,
         0,
       ),
     totalItems: (value) =>

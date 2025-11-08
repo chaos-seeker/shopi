@@ -19,8 +19,11 @@
   * {
     @apply border-border;
   }
+  main {
+    @apply my-4;
+  }
   body {
-    @apply text-[--foreground] overflow-x-hidden bg-[--background] text-gray-600;
+    @apply overflow-x-hidden text-gray-600;
   }
   p {
     @apply text-gray-700;

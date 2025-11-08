@@ -1,10 +1,11 @@
 'use client';
 
+import { ToggleSection } from '@/components/toggle-section';
+import { useToggleUrlState } from '@/hooks/toggle-url-state';
+import { cartSlice } from '@/slices/cart';
+import { userSlice } from '@/slices/user';
+import { cn } from '@/utils/cn';
 import { useKillua } from 'killua';
-import Image from 'next/image';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
 import {
   ChevronLeft,
   Filter,
@@ -14,11 +15,11 @@ import {
   User,
   X,
 } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 import { ThreeDots } from 'react-loader-spinner';
-import { ToggleSection } from '@/components/toggle-section';
-import { useToggleUrlState } from '@/hooks/toggle-url-state';
-import { cartSlice } from '@/slices/cart';
-import { cn } from '@/utils/cn';
 
 export function Header() {
   return (
@@ -75,8 +76,11 @@ const MobileBottom = () => {
 };
 
 const MobileTopAuth = () => {
+  const user = useKillua(userSlice);
+  const userData = user.get();
+
   return (
-    <Link href="/auth">
+    <Link href={userData ? '/profile' : '/auth'}>
       <User size={22} />
     </Link>
   );
@@ -115,7 +119,6 @@ const MobileBottomSearch = () => {
             <div className="p-2 text-smp">
               {searchValue.length ? (
                 <div className="flex items-center justify-center">
-                  {/* @ts-ignore - ThreeDots types incompatibility with React 19 */}
                   <ThreeDots color="#ED1944" width={60} />
                 </div>
               ) : (
@@ -189,13 +192,13 @@ const MobileBottomCart = () => {
                   <X size={15} className="stroke-white" />
                 </button>
                 <Image
-                  alt={item.title.fa}
-                  src={item.images[0]}
+                  alt={item.name_fa}
+                  src={item.image}
                   width={60}
                   height={60}
                 />
                 <div className="mb-4 w-full">
-                  <p className="mb-2 text-smp font-bold">{item.title.fa}</p>
+                  <p className="mb-2 text-smp font-bold">{item.name_fa}</p>
                   <div className="relative flex flex-col items-end">
                     <div className="flex w-24 justify-between rounded-lg border bg-white px-3 py-1.5 font-bold text-gray-700">
                       <button
@@ -206,7 +209,7 @@ const MobileBottomCart = () => {
                         +
                       </button>
                       <p>{localstorageCart.selectors.quantity(item)}</p>
-                      {localstorageCart.selectors.isInCart(item) ? (
+                      {localstorageCart.selectors.isOne(item) ? (
                         <button
                           onClick={() => localstorageCart.reducers.remove(item)}
                         >
@@ -232,13 +235,16 @@ const MobileBottomCart = () => {
                           },
                         )}
                       >
-                        {item.priceWithoutDiscount.toLocaleString('fa-IR')}
+                        {item.price.toLocaleString('fa-IR')}
                       </del>
                       <p className="absolute bottom-3 left-[100px] -rotate-90 text-[10px] font-bold text-black/40">
                         تومان
                       </p>
                       <p className="absolute bottom-0 left-[120px] text-lg font-bold text-black">
-                        {item.priceWithDiscount.toLocaleString('fa-IR')}
+                        {(
+                          item.price *
+                          (1 - item.discount / 100)
+                        ).toLocaleString('fa-IR')}
                       </p>
                     </div>
                     <div
@@ -321,13 +327,18 @@ const DesktopTop = () => {
 };
 
 const DesktopTopAuth = () => {
+  const user = useKillua(userSlice);
+  const userData = user.get();
+
   return (
     <Link
-      href="/auth"
+      href={userData ? '/profile' : '/auth'}
       className="group flex items-center gap-1 text-black transition-all hover:text-red"
     >
-      <User size={20} />
-      <span className="font-bold">وارد شوید</span>
+      <User className="size-5 lg:size-6" />
+      <span className="font-bold">
+        {userData ? userData.full_name : 'وارد شوید'}
+      </span>
     </Link>
   );
 };
@@ -433,13 +444,13 @@ const DesktopBottomCart = () => {
                     <X size={15} className="stroke-white" />
                   </button>
                   <Image
-                    alt={item.title.fa}
-                    src={item.images[0]}
+                    alt={item.name_fa}
+                    src={item.image}
                     width={60}
                     height={60}
                   />
                   <div className="mb-4 w-full">
-                    <p className="mb-2 text-smp font-bold">{item.title.fa}</p>
+                    <p className="mb-2 text-smp font-bold">{item.name_fa}</p>
                     <div className="relative flex flex-col items-end">
                       <div className="flex w-24 justify-between rounded-lg border bg-white px-3 py-1.5 font-bold text-gray-700">
                         <button
@@ -450,7 +461,7 @@ const DesktopBottomCart = () => {
                           +
                         </button>
                         <p>{localstorageCart.selectors.quantity(item)}</p>
-                        {localstorageCart.selectors.quantity(item) === 1 ? (
+                        {localstorageCart.selectors.isOne(item) ? (
                           <button
                             onClick={() =>
                               localstorageCart.reducers.remove(item)
@@ -478,13 +489,16 @@ const DesktopBottomCart = () => {
                             },
                           )}
                         >
-                          {item.priceWithoutDiscount.toLocaleString('fa-IR')}
+                          {item.price.toLocaleString('fa-IR')}
                         </del>
                         <p className="absolute bottom-3 left-[100px] -rotate-90 text-[10px] font-bold text-black/40">
                           تومان
                         </p>
                         <p className="absolute bottom-0 left-[120px] text-lg font-bold text-black">
-                          {item.priceWithDiscount.toLocaleString('fa-IR')}
+                          {(
+                            item.price *
+                            (1 - item.discount / 100)
+                          ).toLocaleString('fa-IR')}
                         </p>
                       </div>
                       <div
@@ -564,7 +578,6 @@ const DesktopBottomSearch = () => {
           <div className="p-2 text-smp">
             {searchValue.length ? (
               <div className="flex items-center justify-center">
-                {/* @ts-ignore - ThreeDots types incompatibility with React 19 */}
                 <ThreeDots color="#ED1944" width={60} />
               </div>
             ) : (
