@@ -1,6 +1,6 @@
-import Link from 'next/link';
-import { ArrowUp } from 'lucide-react';
 import { Form } from '@/containers/routes/auth/form';
+import { ArrowUp } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Page() {
   return (
