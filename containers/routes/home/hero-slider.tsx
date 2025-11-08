@@ -58,7 +58,6 @@ interface ISliderProps {
 
 const Slider = (props: ISliderProps) => {
   return (
-    // @ts-ignore - Swiper types incompatibility with React 19
     <Swiper
       ref={props.swiperRef}
       slidesPerView={1}
@@ -76,7 +75,6 @@ const Slider = (props: ISliderProps) => {
     >
       {heroSliderData.map((item) => {
         return (
-          // @ts-ignore - SwiperSlide types incompatibility with React 19
           <SwiperSlide key={item.image}>
             <Link href={item.path}>
               <div className="relative aspect-[2/1] bg-gray-100 sm:aspect-[2.5/1]">

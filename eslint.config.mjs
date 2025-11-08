@@ -78,7 +78,6 @@ export default [
       '@next': nextPlugin,
     },
     rules: {
-      // Tailwind
       'better-tailwindcss/no-unnecessary-whitespace': 'warn',
       'better-tailwindcss/no-duplicate-classes': 'warn',
       'better-tailwindcss/enforce-consistent-variable-syntax': 'warn',
@@ -89,7 +88,6 @@ export default [
         },
       ],
 
-      // Unused Variables and Imports
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/no-explicit-any': 'off',

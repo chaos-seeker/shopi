@@ -14,7 +14,6 @@ export async function getFilteredProducts(
 ) {
   const { text, categorySlugs, brandSlugs, sort = 'newest' } = params;
 
-  // Get category IDs from slugs if needed
   let categoryIds: number[] | undefined;
   if (categorySlugs && categorySlugs.length > 0) {
     const { data: categories } = await supabaseClient
@@ -25,12 +24,10 @@ export async function getFilteredProducts(
     if (categories && categories.length > 0) {
       categoryIds = categories.map((cat) => cat.id);
     } else {
-      // If no categories found, return empty array
       return { data: [] };
     }
   }
 
-  // Get brand IDs from slugs if needed
   let brandIds: number[] | undefined;
   if (brandSlugs && brandSlugs.length > 0) {
     const { data: brands } = await supabaseClient
@@ -41,12 +38,10 @@ export async function getFilteredProducts(
     if (brands && brands.length > 0) {
       brandIds = brands.map((brand) => brand.id);
     } else {
-      // If no brands found, return empty array
       return { data: [] };
     }
   }
 
-  // Build query
   let query = supabaseClient.from('products').select(
     `
       *,
@@ -55,24 +50,20 @@ export async function getFilteredProducts(
     `,
   );
 
-  // Filter by search text
   if (text) {
     query = query.or(
       `name_fa.ilike.%${text}%,name_en.ilike.%${text}%,description.ilike.%${text}%`,
     );
   }
 
-  // Filter by categories
   if (categoryIds && categoryIds.length > 0) {
     query = query.in('category_id', categoryIds);
   }
 
-  // Filter by brands
   if (brandIds && brandIds.length > 0) {
     query = query.in('brand_id', brandIds);
   }
 
-  // Sort
   switch (sort) {
     case 'newest':
       query = query.order('created_at', { ascending: false });

@@ -19,13 +19,11 @@ export function Sort({ initialSort = 'newest' }: SortProps) {
     shallow: false,
   });
 
-  // Local state for immediate UI update
   const urlSort = searchParams.get('sort') || sort || initialSort;
   const [activeSort, setActiveSort] = useState<'newest' | 'highest' | 'lowest'>(
     urlSort as 'newest' | 'highest' | 'lowest',
   );
 
-  // Sync activeSort with URL when it changes
   useEffect(() => {
     if (urlSort) {
       setActiveSort(urlSort as 'newest' | 'highest' | 'lowest');
@@ -33,11 +31,8 @@ export function Sort({ initialSort = 'newest' }: SortProps) {
   }, [urlSort]);
 
   const handleSort = (value: 'newest' | 'highest' | 'lowest') => {
-    // Update active state immediately for instant UI feedback
     setActiveSort(value);
-    // Show loading immediately before URL update
     setLoading(true);
-    // Use startTransition to make URL update non-blocking
     startTransition(() => {
       setSort(value);
     });

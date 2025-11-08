@@ -163,9 +163,7 @@ const CheckboxItem = ({ slug, text, query }: ICheckboxItemProps) => {
   const isChecked = selectedSlugs.includes(slug);
 
   const handleCheck = () => {
-    // Show loading immediately before URL update
     setLoading(true);
-    // Use startTransition to make URL update non-blocking
     startTransition(() => {
       if (isChecked) {
         const updated = selectedSlugs.filter(

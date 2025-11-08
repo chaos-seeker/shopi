@@ -94,7 +94,6 @@ const MobileBottomSearch = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  // Sync with URL query parameter (only on explore page)
   useEffect(() => {
     if (pathname === '/explore') {
       const textParam = searchParams.get('text') || '';
@@ -110,7 +109,6 @@ const MobileBottomSearch = () => {
     if (query) {
       router.push(`/explore?text=${encodeURIComponent(query)}`);
     } else {
-      // If empty, remove text parameter
       router.push('/explore');
     }
   };
@@ -164,9 +162,7 @@ const MobileBottomCart = () => {
     try {
       const totalPrice = localstorageCart.selectors.totalPrice();
       const totalDiscount = localstorageCart.selectors.totalDiscount();
-      // Calculate original amount (before discount)
       const originalAmount = totalPrice + totalDiscount;
-      // Round all values to 2 decimal places
       const roundedOriginalAmount = Math.round(originalAmount * 100) / 100;
       const roundedDiscount = Math.round(totalDiscount * 100) / 100;
       const roundedAmount = Math.round(totalPrice * 100) / 100;
@@ -504,9 +500,7 @@ const DesktopBottomCart = () => {
     try {
       const totalPrice = localstorageCart.selectors.totalPrice();
       const totalDiscount = localstorageCart.selectors.totalDiscount();
-      // Calculate original amount (before discount)
       const originalAmount = totalPrice + totalDiscount;
-      // Round all values to 2 decimal places
       const roundedOriginalAmount = Math.round(originalAmount * 100) / 100;
       const roundedDiscount = Math.round(totalDiscount * 100) / 100;
       const roundedAmount = Math.round(totalPrice * 100) / 100;
@@ -701,7 +695,6 @@ const DesktopBottomSearch = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  // Sync with URL query parameter (only on explore page)
   useEffect(() => {
     if (pathname === '/explore') {
       const textParam = searchParams.get('text') || '';
@@ -717,7 +710,6 @@ const DesktopBottomSearch = () => {
     if (query) {
       router.push(`/explore?text=${encodeURIComponent(query)}`);
     } else {
-      // If empty, remove text parameter
       router.push('/explore');
     }
   };

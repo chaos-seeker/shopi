@@ -25,7 +25,6 @@ export function Products({ initialProducts }: ProductsProps) {
   const categorySlugs = filterCategory?.split(',').filter(Boolean) || [];
   const brandSlugs = filterBrand?.split(',').filter(Boolean) || [];
 
-  // Create a stable query key
   const queryKey = [
     'filtered-products',
     text,
@@ -34,7 +33,6 @@ export function Products({ initialProducts }: ProductsProps) {
     [...brandSlugs].sort().join(','),
   ].join('|');
 
-  // Track initial query key from SSR (only set once on mount)
   const initialQueryKeyRef = useRef<string | null>(null);
   const previousQueryKeyRef = useRef<string | null>(null);
 
@@ -45,14 +43,12 @@ export function Products({ initialProducts }: ProductsProps) {
 
   const isInitialQuery = queryKey === initialQueryKeyRef.current;
 
-  // Detect when query key changes (filter/sort applied) and show loading immediately
   useEffect(() => {
     if (
       previousQueryKeyRef.current !== null &&
       previousQueryKeyRef.current !== queryKey &&
       !isInitialQuery
     ) {
-      // Query key changed, ensure loading is shown
       setLoading(true);
     }
     previousQueryKeyRef.current = queryKey;
@@ -71,7 +67,6 @@ export function Products({ initialProducts }: ProductsProps) {
         brandSlugs: brandSlugs.length > 0 ? brandSlugs : undefined,
         sort: sort || 'newest',
       });
-      // Reset loading state when query completes
       setLoading(false);
       return result;
     },
@@ -80,7 +75,6 @@ export function Products({ initialProducts }: ProductsProps) {
     refetchOnMount: true,
   });
 
-  // Reset loading when query completes
   useEffect(() => {
     if (!isLoading && !isFetching) {
       setLoading(false);
@@ -88,8 +82,6 @@ export function Products({ initialProducts }: ProductsProps) {
   }, [isLoading, isFetching, setLoading]);
 
   const products = productsResult?.data || initialProducts;
-  // Show loader immediately from context (set on click) or when fetching (not initial query)
-  // Prioritize isLoadingFromContext for immediate feedback
   const showLoader =
     isLoadingFromContext || ((isLoading || isFetching) && !isInitialQuery);
 
