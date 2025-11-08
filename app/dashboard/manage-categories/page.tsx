@@ -1,6 +1,7 @@
 'use client';
 
 import { deleteCategory } from '@/actions/category/delete-category';
+import { ViewportAnimation } from '@/components/viewport-animation';
 import { ListCategories } from '@/containers/routes/dashboard/manage-categories/list-categories';
 import { ModalCategory } from '@/containers/routes/dashboard/manage-categories/modal-category';
 import { useApiCall } from '@/hooks/api-call';
@@ -39,10 +40,12 @@ export default function Page() {
 
   return (
     <>
-      <ListCategories
-        onEditClick={handleEditClick}
-        onDeleteClick={handleDeleteClick}
-      />
+      <ViewportAnimation>
+        <ListCategories
+          onEditClick={handleEditClick}
+          onDeleteClick={handleDeleteClick}
+        />
+      </ViewportAnimation>
       <ModalCategory
         isOpen={addCategoryModal.isShow}
         onClose={() => addCategoryModal.hide()}

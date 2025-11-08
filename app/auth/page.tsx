@@ -1,3 +1,4 @@
+import { ViewportAnimation } from '@/components/viewport-animation';
 import { Form } from '@/containers/routes/auth/form';
 import { ArrowUp } from 'lucide-react';
 import Link from 'next/link';
@@ -6,7 +7,9 @@ export default function Page() {
   return (
     <div className="relative flex h-screen items-center justify-center pb-6 pt-20">
       <BackToTop />
-      <Form />
+      <ViewportAnimation>
+        <Form />
+      </ViewportAnimation>
     </div>
   );
 }

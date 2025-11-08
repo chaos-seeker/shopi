@@ -1,6 +1,7 @@
 import { getAllBrands } from '@/actions/brand/get-all-brands';
 import { getAllCategories } from '@/actions/category/get-all-categories';
 import { getAllProducts } from '@/actions/product/get-all-products';
+import { ViewportAnimation } from '@/components/viewport-animation';
 import { ProductSlider } from '@/containers/routes/global/product-slider';
 import { Banners } from '@/containers/routes/home/banners';
 import { BrandSlider } from '@/containers/routes/home/brand-slider';
@@ -22,28 +23,46 @@ export default async function Page() {
 
   return (
     <div className="flex size-full flex-col gap-6">
-      <div className="container grid grid-cols-4 gap-5">
-        <HeroSlider />
-        <HeroOfferSlider products={products} />
-      </div>
-      <CategorySlider categories={categories} isHomepage={true} />
-      <Banners />
-      <ProductSliderWithBanner
-        text="ارزان ترین"
-        position="right"
-        path="/"
-        image="/images/routes/home/product-slider-with-banner-laptop.png"
-        products={products}
-      />
-      <ProductSlider title="پرفروش ترین محصولات" path="/" products={products} />
-      <ProductSliderWithBanner
-        text="گران ترین"
-        position="left"
-        path="/"
-        image="/images/routes/home/product-slider-with-banner-play-station.png"
-        products={products}
-      />
-      <BrandSlider brands={brands} />
+      <ViewportAnimation>
+        <div className="container grid grid-cols-4 gap-5">
+          <HeroSlider />
+          <HeroOfferSlider products={products} />
+        </div>
+      </ViewportAnimation>
+      <ViewportAnimation>
+        <CategorySlider categories={categories} isHomepage={true} />
+      </ViewportAnimation>
+      <ViewportAnimation>
+        <Banners />
+      </ViewportAnimation>
+      <ViewportAnimation>
+        <ProductSliderWithBanner
+          text="ارزان ترین"
+          position="right"
+          path="/"
+          image="/images/routes/home/product-slider-with-banner-laptop.png"
+          products={products}
+        />
+      </ViewportAnimation>
+      <ViewportAnimation>
+        <ProductSlider
+          title="پرفروش ترین محصولات"
+          path="/"
+          products={products}
+        />
+      </ViewportAnimation>
+      <ViewportAnimation>
+        <ProductSliderWithBanner
+          text="گران ترین"
+          position="left"
+          path="/"
+          image="/images/routes/home/product-slider-with-banner-play-station.png"
+          products={products}
+        />
+      </ViewportAnimation>
+      <ViewportAnimation>
+        <BrandSlider brands={brands} />
+      </ViewportAnimation>
     </div>
   );
 }

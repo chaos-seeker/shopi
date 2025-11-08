@@ -3,6 +3,7 @@
 import { getAllBrands } from '@/actions/brand/get-all-brands';
 import { getAllCategories } from '@/actions/category/get-all-categories';
 import { deleteProduct } from '@/actions/product/delete-product';
+import { ViewportAnimation } from '@/components/viewport-animation';
 import { ListProducts } from '@/containers/routes/dashboard/manage-product/list-products';
 import { ModalProduct } from '@/containers/routes/dashboard/manage-product/modal-product';
 import { useApiCall } from '@/hooks/api-call';
@@ -61,10 +62,12 @@ export default function Page() {
 
   return (
     <>
-      <ListProducts
-        onEditClick={handleEditClick}
-        onDeleteClick={handleDeleteClick}
-      />
+      <ViewportAnimation>
+        <ListProducts
+          onEditClick={handleEditClick}
+          onDeleteClick={handleDeleteClick}
+        />
+      </ViewportAnimation>
       <ModalProduct
         isOpen={addProductModal.isShow}
         onClose={() => addProductModal.hide()}

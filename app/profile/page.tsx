@@ -1,5 +1,6 @@
 'use client';
 
+import { ViewportAnimation } from '@/components/viewport-animation';
 import { ProfileSidebar } from '@/containers/routes/profile/profile-sidebar';
 import { UserOrders } from '@/containers/routes/profile/user-orders';
 import { userSlice } from '@/slices/user';
@@ -23,15 +24,17 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="container py-6 h-full">
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-1">
-          <ProfileSidebar />
-        </div>
-        <div className="lg:col-span-2">
-          <UserOrders userId={userData.id} />
+    <ViewportAnimation>
+      <div className="container py-6 h-full">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <ViewportAnimation className="lg:col-span-1">
+            <ProfileSidebar />
+          </ViewportAnimation>
+          <ViewportAnimation className="lg:col-span-2">
+            <UserOrders userId={userData.id} />
+          </ViewportAnimation>
         </div>
       </div>
-    </div>
+    </ViewportAnimation>
   );
 }

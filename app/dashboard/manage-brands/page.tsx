@@ -1,6 +1,7 @@
 'use client';
 
 import { deleteBrand } from '@/actions/brand/delete-brand';
+import { ViewportAnimation } from '@/components/viewport-animation';
 import { ListBrands } from '@/containers/routes/dashboard/manage-brand/list-brands';
 import { ModalBrand } from '@/containers/routes/dashboard/manage-brand/modal-brand';
 import { useApiCall } from '@/hooks/api-call';
@@ -37,10 +38,12 @@ export default function Page() {
 
   return (
     <>
-      <ListBrands
-        onEditClick={handleEditClick}
-        onDeleteClick={handleDeleteClick}
-      />
+      <ViewportAnimation>
+        <ListBrands
+          onEditClick={handleEditClick}
+          onDeleteClick={handleDeleteClick}
+        />
+      </ViewportAnimation>
       <ModalBrand
         isOpen={addBrandModal.isShow}
         onClose={() => addBrandModal.hide()}

@@ -2,6 +2,7 @@ import { getAllBrands } from '@/actions/brand/get-all-brands';
 import { getAllCategories } from '@/actions/category/get-all-categories';
 import { getFilteredProducts } from '@/actions/product/get-filtered-products';
 import { BreadCrumb } from '@/components/bread-crumb';
+import { ViewportAnimation } from '@/components/viewport-animation';
 import { CheckboxAccordions } from '@/containers/routes/explore/checkbox-accordions';
 import { FiltersLoadingProvider } from '@/containers/routes/explore/filters-loading-context';
 import { Products } from '@/containers/routes/explore/products';
@@ -43,19 +44,21 @@ export default async function Page({ searchParams }: PageProps) {
 
   return (
     <FiltersLoadingProvider>
-      <div className="container relative z-10 flex size-full flex-col gap-3">
-        <div className="flex items-center justify-between gap-3">
-          <BreadCrumb title="فروشگاه" />
-          <span className="h-px grow bg-[#e6e9ee]" />
-          <Sort initialSort={sort} />
-        </div>
-        <div className="flex lg:gap-3">
-          <CheckboxAccordions categories={categories} brands={brands} />
-          <div className="grid flex-1 gap-3">
-            <Products initialProducts={initialProducts} />
+      <ViewportAnimation>
+        <div className="container relative z-10 flex size-full flex-col gap-3">
+          <div className="flex items-center justify-between gap-3">
+            <BreadCrumb title="فروشگاه" />
+            <span className="h-px grow bg-[#e6e9ee]" />
+            <Sort initialSort={sort} />
+          </div>
+          <div className="flex lg:gap-3">
+            <CheckboxAccordions categories={categories} brands={brands} />
+            <div className="grid flex-1 gap-3">
+              <Products initialProducts={initialProducts} />
+            </div>
           </div>
         </div>
-      </div>
+      </ViewportAnimation>
     </FiltersLoadingProvider>
   );
 }
