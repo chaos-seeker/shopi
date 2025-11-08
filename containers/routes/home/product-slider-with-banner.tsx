@@ -2,14 +2,13 @@
 
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { getAllProducts } from '@/actions/product/get-all-products';
 import { ProductCard } from '@/components/product-card';
+import { TProduct } from '@/types/product';
 import { cn } from '@/utils/cn';
-import { useQuery } from '@tanstack/react-query';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -18,10 +17,15 @@ interface IProductSliderProps {
   text: string;
   path: string;
   position: 'left' | 'right';
+  products: TProduct[];
 }
 
 export function ProductSliderWithBanner(props: IProductSliderProps) {
   const swiperRef = useRef<any>(null);
+
+  const shuffledProducts = props.products
+    ? [...props.products].sort(() => Math.random() - 0.5).slice(0, 10)
+    : [];
 
   return (
     <section className="group/section container relative z-10 col-span-full grid w-full grid-cols-5 gap-5 overflow-hidden rounded-lg">
@@ -37,7 +41,7 @@ export function ProductSliderWithBanner(props: IProductSliderProps) {
           'md:order-1': props.position === 'right',
         })}
       >
-        <Slider swiperRef={swiperRef} />
+        <Slider swiperRef={swiperRef} products={shuffledProducts} />
       </div>
     </section>
   );
@@ -81,30 +85,12 @@ const Banner = (props: IBannerProps) => {
 
 interface ISliderProps {
   swiperRef: any;
+  products: TProduct[];
 }
 
 const Slider = (props: ISliderProps) => {
-  const { data: products, isLoading } = useQuery({
-    queryKey: ['products'],
-    queryFn: async () => {
-      const result = await getAllProducts();
-      if (result.error) throw new Error(result.error);
-      return result.data || [];
-    },
-    staleTime: 5 * 60 * 1000,
-  });
-
-  const shuffledProducts = products
-    ? [...products].sort(() => Math.random() - 0.5).slice(0, 10)
-    : [];
-
-  if (isLoading) {
-    return null;
-  }
-
   return (
     <div className="relative">
-      {/* @ts-ignore - Swiper types incompatibility with React 19 */}
       <Swiper
         slidesPerView="auto"
         spaceBetween={0}
@@ -113,9 +99,8 @@ const Slider = (props: ISliderProps) => {
         id="product-slider"
         className="rounded-xl border bg-white"
       >
-        {shuffledProducts.map((item) => {
+        {props.products.map((item) => {
           return (
-            // @ts-ignore - SwiperSlide types incompatibility with React 19
             <SwiperSlide
               key={item.id}
               className="group !w-[268px] border-l last:border-none"
@@ -128,7 +113,7 @@ const Slider = (props: ISliderProps) => {
       <Navigation swiperRef={props.swiperRef} />
     </div>
   );
-}
+};
 
 interface INavigationProps {
   swiperRef: any;

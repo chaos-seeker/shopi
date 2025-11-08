@@ -2,51 +2,38 @@
 
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { getAllCategories } from '@/actions/category/get-all-categories';
 import { CardBorderBottom } from '@/components/card-border-bottom';
 import { SliderNavigation } from '@/components/slider-navigation';
 import { TCategory } from '@/types/category';
 import { cn } from '@/utils/cn';
-import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useRef } from 'react';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-export function CategorySlider() {
+interface ICategorySliderProps {
+  categories: TCategory[];
+  isHomepage?: boolean;
+}
+
+export function CategorySlider({
+  categories,
+  isHomepage = false,
+}: ICategorySliderProps) {
   const swiperRef = useRef<any>(null);
-  const pathname = usePathname();
-  const isPathnameHomepage = pathname === '/';
-
-  const { data: categories, isLoading } = useQuery({
-    queryKey: ['categories'],
-    queryFn: async () => {
-      const result = await getAllCategories();
-      if (result.error) throw new Error(result.error);
-      return result.data || [];
-    },
-    staleTime: 5 * 60 * 1000,
-  });
-
-  if (isLoading) {
-    return null;
-  }
 
   return (
     <section
       className={cn(
         'group/section relative z-10 col-span-full flex flex-col overflow-hidden',
         {
-          container: isPathnameHomepage,
+          container: isHomepage,
         },
       )}
     >
-      <Slider swiperRef={swiperRef} categories={categories || []} />
-      {isPathnameHomepage ? (
-        <SliderNavigation swiperRef={swiperRef} />
-      ) : null}
+      <Slider swiperRef={swiperRef} categories={categories} />
+      {isHomepage ? <SliderNavigation swiperRef={swiperRef} /> : null}
     </section>
   );
 }

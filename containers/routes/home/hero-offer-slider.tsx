@@ -2,43 +2,30 @@
 
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { getAllProducts } from '@/actions/product/get-all-products';
 import { ProductCardFooter } from '@/components/product-card-footer';
 import { TProduct } from '@/types/product';
-import { useQuery } from '@tanstack/react-query';
+import { cn } from '@/utils/cn';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { cn } from '@/utils/cn';
 
-export function HeroOfferSlider() {
+interface IHeroOfferSliderProps {
+  products: TProduct[];
+}
+
+export function HeroOfferSlider({ products }: IHeroOfferSliderProps) {
   const swiperRef = useRef<any>(null);
-
-  const { data: products, isLoading } = useQuery({
-    queryKey: ['products'],
-    queryFn: async () => {
-      const result = await getAllProducts();
-      if (result.error) throw new Error(result.error);
-      return result.data || [];
-    },
-    staleTime: 5 * 60 * 1000,
-  });
 
   const shuffledProducts = products
     ? [...products].sort(() => Math.random() - 0.5).slice(0, 10)
     : [];
 
-  if (isLoading) {
-    return null;
-  }
-
   return (
     <section className="group/section relative z-10 col-span-full overflow-hidden xl:col-span-1">
       <div className="bg-white">
-        {/* @ts-ignore - Swiper types incompatibility with React 19 */}
         <Swiper
           slidesPerView="auto"
           spaceBetween={13}
@@ -57,7 +44,6 @@ export function HeroOfferSlider() {
         >
           {shuffledProducts.map((item) => {
             return (
-              // @ts-ignore - SwiperSlide types incompatibility with React 19
               <SwiperSlide
                 key={item.id}
                 className="!w-[268px] rounded-xl bg-red xl:size-full xl:!h-[372px] xl:!w-[297px]"
@@ -71,11 +57,7 @@ export function HeroOfferSlider() {
                   >
                     <div className="relative size-[175px] bg-[url('/images/routes/home/hero-offer-slider-wave-bg.svg')] bg-center bg-no-repeat">
                       {item.gallery && item.gallery.length > 0 && (
-                        <Image
-                          src={item.gallery[0]}
-                          alt={item.name_fa}
-                          fill
-                        />
+                        <Image src={item.gallery[0]} alt={item.name_fa} fill />
                       )}
                     </div>
                     <p className="line-clamp-2 font-bold text-white">
@@ -103,7 +85,7 @@ function OfferSliderCardPrice({ item }: { item: TProduct }) {
   const discount = item.discount ?? 0;
   const priceWithoutDiscount = price;
   const priceWithDiscount = price * (1 - discount / 100);
-  
+
   return (
     <div>
       <del className="absolute bottom-8 left-20 text-smp text-gray-50">

@@ -2,36 +2,26 @@
 
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { getAllProducts } from '@/actions/product/get-all-products';
 import { ProductCard } from '@/components/product-card';
 import { SliderNavigation } from '@/components/slider-navigation';
-import { useQuery } from '@tanstack/react-query';
+import { TProduct } from '@/types/product';
+import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useRef } from 'react';
-import { ChevronLeft } from 'lucide-react';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 interface IProductSliderProps {
   title: string;
   path: string;
+  products: TProduct[];
 }
 
 export function ProductSlider(props: IProductSliderProps) {
   const swiperRef = useRef<any>(null);
 
-  const { data: products, isLoading } = useQuery({
-    queryKey: ['products'],
-    queryFn: async () => {
-      const result = await getAllProducts();
-      if (result.error) throw new Error(result.error);
-      return result.data || [];
-    },
-    staleTime: 5 * 60 * 1000,
-  });
-
-  const shuffledProducts = products
-    ? [...products].sort(() => Math.random() - 0.5).slice(0, 10)
+  const shuffledProducts = props.products
+    ? [...props.products].sort(() => Math.random() - 0.5).slice(0, 10)
     : [];
 
   return (
@@ -49,30 +39,26 @@ export function ProductSlider(props: IProductSliderProps) {
       </div>
       <div>
         <div className="bg-white">
-          {isLoading ? null : (
-            // @ts-ignore - Swiper types incompatibility with React 19
-            <Swiper
-              slidesPerView="auto"
-              spaceBetween={13}
-              ref={swiperRef}
-              modules={[Autoplay]}
-              id="product-slider"
-            >
-              {shuffledProducts.map((item) => {
-                return (
-                  // @ts-ignore - SwiperSlide types incompatibility with React 19
-                  <SwiperSlide
-                    key={item.id}
-                    className="!w-[268px] rounded-xl border bg-white transition-all hover:border-gray-300"
-                  >
-                    <ProductCard data={item} />
-                  </SwiperSlide>
-                );
-              })}
-            </Swiper>
-          )}
+          <Swiper
+            slidesPerView="auto"
+            spaceBetween={13}
+            ref={swiperRef}
+            modules={[Autoplay]}
+            id="product-slider"
+          >
+            {shuffledProducts.map((item) => {
+              return (
+                <SwiperSlide
+                  key={item.id}
+                  className="!w-[268px] rounded-xl border bg-white transition-all hover:border-gray-300"
+                >
+                  <ProductCard data={item} />
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
         </div>
-        {!isLoading && <SliderNavigation swiperRef={swiperRef} />}
+        <SliderNavigation swiperRef={swiperRef} />
       </div>
     </section>
   );

@@ -2,11 +2,9 @@
 
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { getAllBrands } from '@/actions/brand/get-all-brands';
 import { CardBorderBottom } from '@/components/card-border-bottom';
 import { SliderNavigation } from '@/components/slider-navigation';
 import { TBrand } from '@/types/brand';
-import { useQuery } from '@tanstack/react-query';
 import { ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,26 +12,16 @@ import { useRef } from 'react';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-export function BrandSlider() {
+interface IBrandSliderProps {
+  brands: TBrand[];
+}
+
+export function BrandSlider({ brands }: IBrandSliderProps) {
   const swiperRef = useRef<any>(null);
-
-  const { data: brands, isLoading } = useQuery({
-    queryKey: ['brands'],
-    queryFn: async () => {
-      const result = await getAllBrands();
-      if (result.error) throw new Error(result.error);
-      return result.data || [];
-    },
-    staleTime: 5 * 60 * 1000,
-  });
-
-  if (isLoading) {
-    return null;
-  }
 
   return (
     <section className="group/section container relative z-10 col-span-full flex flex-col overflow-hidden">
-      <Slider swiperRef={swiperRef} brands={brands || []} />
+      <Slider swiperRef={swiperRef} brands={brands} />
       <SliderNavigation swiperRef={swiperRef} />
     </section>
   );
