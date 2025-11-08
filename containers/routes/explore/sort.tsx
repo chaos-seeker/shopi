@@ -1,35 +1,67 @@
 'use client';
 
+import { useFiltersLoading } from '@/containers/routes/explore/filters-loading-context';
+import { cn } from '@/utils/cn';
 import { useSearchParams } from 'next/navigation';
 import { useQueryState } from 'nuqs';
-import { useEffect, useState } from 'react';
-import { cn } from '@/utils/cn';
+import { startTransition, useEffect, useState } from 'react';
 
-export function Sort() {
+interface SortProps {
+  initialSort?: 'newest' | 'highest' | 'lowest';
+}
+
+export function Sort({ initialSort = 'newest' }: SortProps) {
   const searchParams = useSearchParams();
-  const querySort = searchParams.get('sort') || 'newest';
-  const [, setNuqsStateSort] = useQueryState('sort');
-  const [activedSort, setActivedSort] = useState(querySort);
-  useEffect(() => {
-    setActivedSort(querySort);
-  }, [querySort]);
+  const { setLoading } = useFiltersLoading();
+  const [sort, setSort] = useQueryState('sort', {
+    defaultValue: initialSort,
+    parse: (value) => (value as 'newest' | 'highest' | 'lowest') || initialSort,
+    shallow: false,
+  });
 
-  const handleSort = (value: string) => {
-    setNuqsStateSort(value);
+  // Local state for immediate UI update
+  const urlSort = searchParams.get('sort') || sort || initialSort;
+  const [activeSort, setActiveSort] = useState<'newest' | 'highest' | 'lowest'>(
+    urlSort as 'newest' | 'highest' | 'lowest',
+  );
+
+  // Sync activeSort with URL when it changes
+  useEffect(() => {
+    if (urlSort) {
+      setActiveSort(urlSort as 'newest' | 'highest' | 'lowest');
+    }
+  }, [urlSort]);
+
+  const handleSort = (value: 'newest' | 'highest' | 'lowest') => {
+    // Update active state immediately for instant UI feedback
+    setActiveSort(value);
+    // Show loading immediately before URL update
+    setLoading(true);
+    // Use startTransition to make URL update non-blocking
+    startTransition(() => {
+      setSort(value);
+    });
   };
+
+  const currentSort = activeSort;
+
+  const sortOptions: Array<{
+    title: string;
+    value: 'newest' | 'highest' | 'lowest';
+  }> = [
+    { title: 'جدید ترین', value: 'newest' },
+    { title: 'گران ترین', value: 'highest' },
+    { title: 'ارزان ترین', value: 'lowest' },
+  ];
 
   return (
     <div>
       <ul className="flex gap-2 text-sm font-medium text-gray-500">
-        {[
-          { title: 'جدید ترین', value: 'newest' },
-          { title: 'گران ترین', value: 'highest' },
-          { title: 'ارزان ترین', value: 'lowest' },
-        ].map((item) => (
+        {sortOptions.map((item) => (
           <li key={item.value} className="hover:text-green">
             <button
               className={cn({
-                'text-green font-bold': activedSort === item.value,
+                'text-green font-bold': currentSort === item.value,
               })}
               onClick={() => handleSort(item.value)}
             >

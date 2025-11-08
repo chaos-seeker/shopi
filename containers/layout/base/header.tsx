@@ -24,7 +24,7 @@ import toast from 'react-hot-toast';
 
 export function Header() {
   return (
-    <header className="mb-3">
+    <header>
       <Mobile />
       <Desktop />
     </header>
