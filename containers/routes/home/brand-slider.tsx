@@ -34,7 +34,6 @@ interface ISliderProps {
 
 const Slider = (props: ISliderProps) => {
   return (
-    // @ts-ignore - Swiper types incompatibility with React 19
     <Swiper
       slidesPerView="auto"
       spaceBetween={13}
@@ -44,7 +43,6 @@ const Slider = (props: ISliderProps) => {
       className="container"
     >
       {props.brands.map((brand) => (
-        // @ts-ignore - SwiperSlide types incompatibility with React 19
         <SwiperSlide key={brand.id} className="w-48!">
           <Card brand={brand} />
         </SwiperSlide>

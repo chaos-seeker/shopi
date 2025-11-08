@@ -2,6 +2,7 @@
 
 import { ToggleSection } from '@/components/toggle-section';
 import { useFiltersLoading } from '@/containers/routes/explore/filters-loading-context';
+import { SearchTextBadge } from '@/containers/routes/explore/search-text-badge';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
 import { TBrand } from '@/types/brand';
 import { TCategory } from '@/types/category';
@@ -26,6 +27,7 @@ export function CheckboxAccordions({
       <div className="sticky top-3 flex flex-col gap-3 overflow-y-auto">
         <div className="hidden min-w-64 lg:block">
           <div className="flex flex-col gap-3">
+            <SearchTextBadge />
             <CategoriesAccordion categories={categories} />
             <BrandsAccordion brands={brands} />
           </div>
@@ -39,6 +41,7 @@ export function CheckboxAccordions({
       >
         <div className="flex flex-col gap-2.5 p-2.5">
           <div className="flex flex-col gap-3">
+            <SearchTextBadge />
             <CategoriesAccordion categories={categories} />
             <BrandsAccordion brands={brands} />
           </div>

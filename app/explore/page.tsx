@@ -5,15 +5,14 @@ import { BreadCrumb } from '@/components/bread-crumb';
 import { CheckboxAccordions } from '@/containers/routes/explore/checkbox-accordions';
 import { FiltersLoadingProvider } from '@/containers/routes/explore/filters-loading-context';
 import { Products } from '@/containers/routes/explore/products';
-import { SearchTextBadge } from '@/containers/routes/explore/search-text-badge';
 import { Sort } from '@/containers/routes/explore/sort';
 
 interface PageProps {
   searchParams: {
     text?: string;
     sort?: 'newest' | 'highest' | 'lowest';
-    'category'?: string;
-    'brand'?: string;
+    category?: string;
+    brand?: string;
   };
 }
 
@@ -47,10 +46,7 @@ export default async function Page({ searchParams }: PageProps) {
         <div className="flex items-center justify-between gap-3">
           <BreadCrumb title="فروشگاه" />
           <span className="h-px grow bg-[#e6e9ee]" />
-          <div className="flex items-center gap-3">
-            <SearchTextBadge />
-            <Sort initialSort={sort} />
-          </div>
+          <Sort initialSort={sort} />
         </div>
         <div className="flex lg:gap-3">
           <CheckboxAccordions categories={categories} brands={brands} />

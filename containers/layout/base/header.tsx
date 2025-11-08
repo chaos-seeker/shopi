@@ -18,8 +18,8 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 export function Header() {
@@ -91,12 +91,27 @@ const MobileTopAuth = () => {
 const MobileBottomSearch = () => {
   const [searchValue, setSearchValue] = useState('');
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  // Sync with URL query parameter (only on explore page)
+  useEffect(() => {
+    if (pathname === '/explore') {
+      const textParam = searchParams.get('text') || '';
+      setSearchValue(textParam);
+    } else {
+      setSearchValue('');
+    }
+  }, [searchParams, pathname]);
 
   const handleSearch = (e: React.MouseEvent) => {
     e.preventDefault();
     const query = searchValue.trim();
     if (query) {
       router.push(`/explore?text=${encodeURIComponent(query)}`);
+    } else {
+      // If empty, remove text parameter
+      router.push('/explore');
     }
   };
 
@@ -683,12 +698,27 @@ const DesktopBottomCart = () => {
 const DesktopBottomSearch = () => {
   const [searchValue, setSearchValue] = useState('');
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  // Sync with URL query parameter (only on explore page)
+  useEffect(() => {
+    if (pathname === '/explore') {
+      const textParam = searchParams.get('text') || '';
+      setSearchValue(textParam);
+    } else {
+      setSearchValue('');
+    }
+  }, [searchParams, pathname]);
 
   const handleSearch = (e: React.MouseEvent) => {
     e.preventDefault();
     const query = searchValue.trim();
     if (query) {
       router.push(`/explore?text=${encodeURIComponent(query)}`);
+    } else {
+      // If empty, remove text parameter
+      router.push('/explore');
     }
   };
 
