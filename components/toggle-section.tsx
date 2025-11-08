@@ -1,7 +1,7 @@
-import { ReactNode, RefObject, useRef } from 'react';
-import { X } from 'lucide-react';
-import { useOnClickOutside } from 'usehooks-ts';
 import { cn } from '@/utils/cn';
+import { X } from 'lucide-react';
+import { ReactNode, RefObject, useRef } from 'react';
+import { useOnClickOutside } from 'usehooks-ts';
 
 interface IToggleSectionProps {
   title: string;
@@ -30,7 +30,7 @@ export function ToggleSection(props: IToggleSectionProps) {
       />
       <div
         ref={sectionRef}
-        className={cn('transition-all  relative z-50', props.className, {
+        className={cn('transition-all relative z-50', props.className, {
           show: props.isShow,
           hide: !props.isShow,
         })}

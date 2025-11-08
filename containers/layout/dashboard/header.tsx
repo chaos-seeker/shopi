@@ -1,5 +1,6 @@
 'use client';
 
+import { useModal } from '@/hooks/modal';
 import { cn } from '@/utils/cn';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,6 +11,8 @@ export default function Header() {
   const pathname = usePathname();
   const isManageProducts = pathname?.includes('/manage-products');
   const isManageCategories = pathname?.includes('/manage-categories');
+  const addProductModal = useModal('add-product');
+  const addCategoryModal = useModal('add-category');
 
   return (
     <header>
@@ -30,20 +33,22 @@ export default function Header() {
             </button>
             <div className="flex items-center gap-2">
               {isManageCategories && (
-                <Link
-                  href="/dashboard/manage-categories?action=create"
+                <button
+                  type="button"
+                  onClick={() => addCategoryModal.show()}
                   className="bg-red hover:bg-red/90 text-sm flex items-center gap-1.5 rounded-xl px-4 py-2.5 transition-all"
                 >
                   <p className="text-white">افزودن دسته‌بندی</p>
-                </Link>
+                </button>
               )}
               {isManageProducts && (
-                <Link
-                  href="/dashboard/manage-products?action=create"
+                <button
+                  type="button"
+                  onClick={() => addProductModal.show()}
                   className="bg-red hover:bg-red/90 text-sm flex items-center gap-1.5 rounded-xl px-4 py-2.5 transition-all"
                 >
                   <p className="text-white">افزودن محصول</p>
-                </Link>
+                </button>
               )}
             </div>
           </div>
@@ -61,9 +66,9 @@ const Tabs = () => {
   const activeTabRef = useRef<HTMLAnchorElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const data = [
-    { label: 'مدیریت سفارش‌ها', href: '/dashboard/manage-orders' },
     { label: 'مدیریت محصولات', href: '/dashboard/manage-products' },
     { label: 'مدیریت دسته‌بندی‌ها', href: '/dashboard/manage-categories' },
+    { label: 'مدیریت سفارش‌ها', href: '/dashboard/manage-orders' },
   ];
 
   useEffect(() => {
