@@ -1,3 +1,4 @@
+import { getProductBySlug } from '@/actions/product/get-product-by-slug';
 import { BreadCrumb } from '@/components/bread-crumb';
 import { ProductCardFooter } from '@/components/product-card-footer';
 import { Category } from '@/containers/routes/single-product/category';
@@ -7,44 +8,71 @@ import { MiniDescription } from '@/containers/routes/single-product/mini-descrip
 import { Price } from '@/containers/routes/single-product/price';
 import { Quantity } from '@/containers/routes/single-product/quantity';
 import { Title } from '@/containers/routes/single-product/title';
-import { productsData } from '@/resources/products';
+import { TProduct } from '@/types/product';
+import { notFound } from 'next/navigation';
 
 interface IPageProps {
   params: Promise<{
-    slug: string;
+    slug: string | string[];
   }>;
 }
 
 export default async function Page(props: IPageProps) {
   const { slug } = await props.params;
-  const data = productsData[Number(slug[0]) - 1];
+  const productSlug = Array.isArray(slug) ? slug[slug.length - 1] : slug;
+
+  const result = await getProductBySlug(productSlug);
+
+  if (result.error || !result.data) {
+    notFound();
+  }
+
+  const product = result.data as TProduct;
+
+  const priceWithoutDiscount = product.price;
+  const priceWithDiscount = product.price * (1 - product.discount / 100);
 
   return (
     <div className="container">
       <div className="mb-2 flex size-full items-center gap-3">
-        <BreadCrumb title="فروشگاه" link={data.category} />
+        <BreadCrumb
+          title={product.name_fa}
+          link={{
+            text: product.category.name_fa,
+            path: `/explore?category=${product.category.slug}`,
+          }}
+        />
         <span className="h-px grow bg-[#e6e9ee]" />
       </div>
       <div className="gap-5 xl:flex">
         <div className="flex flex-col gap-3">
-          <Images images={data.images} title={data.title} />
-          <Category category={data.category} />
+          <Images
+            images={product.gallery}
+            title={{ fa: product.name_fa, en: product.name_en }}
+          />
+          <Category
+            category={{
+              text: product.category.name_fa,
+              image: product.category.image,
+              path: `/explore?category=${product.category.slug}`,
+            }}
+          />
         </div>
-        <div>
-          <Title en={data.title.en} fa={data.title.fa} />
+        <div className="w-full">
+          <Title en={product.name_en} fa={product.name_fa} />
           <div className="gap-5 md:flex md:flex-row-reverse">
             <div className="relative z-10 h-fit min-w-[300px] rounded-xl border p-3">
               <Price
-                discount={data.discount}
-                priceWithDiscount={data.priceWithDiscount}
-                priceWithoutDiscount={data.priceWithoutDiscount}
+                discount={product.discount}
+                priceWithDiscount={priceWithDiscount}
+                priceWithoutDiscount={priceWithoutDiscount}
               />
-              <Quantity quantity={data.quantity} />
-              <ProductCardFooter type="single-product" data={data} />
+              <Quantity quantity={product.quantity} />
+              <ProductCardFooter type="single-product" data={product} />
             </div>
             <div className="mt-5 flex w-full flex-col gap-5 sm:flex-row-reverse md:mt-0 xl:gap-5">
-              <MiniAttributes attributes={data.attributes} />
-              <MiniDescription description={data.description} />
+              <MiniAttributes attributes={product.property} />
+              <MiniDescription description={product.description} />
             </div>
           </div>
         </div>

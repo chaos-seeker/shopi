@@ -14,14 +14,17 @@ interface IProductCardActionsProps {
 }
 
 export function ProductCardPrice({ data }: { data: TProduct }) {
+  const priceWithoutDiscount = data.price;
+  const priceWithDiscount = data.price * (1 - data.discount / 100);
+  
   return (
     <div>
       <del className="absolute bottom-8 left-20 text-smp text-gray-50">
-        {data.priceWithDiscount.toLocaleString('fa-IR')}
+        {priceWithDiscount.toLocaleString('fa-IR')}
       </del>
       <div>
         <p className="absolute bottom-1 left-8 text-2xl font-bold text-white">
-          {data.priceWithoutDiscount.toLocaleString('fa-IR')}
+          {priceWithoutDiscount.toLocaleString('fa-IR')}
         </p>
         <p className="absolute bottom-5 left-2 -rotate-90 text-xs font-bold text-white">
           تومان
