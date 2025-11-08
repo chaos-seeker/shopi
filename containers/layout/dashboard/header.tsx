@@ -47,7 +47,7 @@ export default function Header() {
               )}
             </div>
           </div>
-          <div className="mt-3 flex w-full justify-center border-t border-slate-200 px-4 py-4">
+          <div className="mt-3 flex w-full justify-center border-t px-4 py-4">
             <Tabs />
           </div>
         </div>
