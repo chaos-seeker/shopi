@@ -1,12 +1,13 @@
 'use client';
 
 import { auth } from '@/actions/auth/auth';
+import { Input } from '@/components/input';
 import { useApiCall } from '@/hooks/api-call';
-import { cn } from '@/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
+import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
 
@@ -20,6 +21,7 @@ const formSchema = z.object({
 });
 
 export function Form() {
+  const router = useRouter();
   const [callApi, isLoadingSubmitBtn] = useApiCall();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,7 +36,7 @@ export function Form() {
     await callApi(auth(data), (result) => {
       const authResult = result as Awaited<ReturnType<typeof auth>>;
       if (!authResult.ok) {
-        toast.error(authResult.error || 'خطایی رخ داد');
+        toast.error(authResult.error!);
         return;
       }
       toast.success(
@@ -43,12 +45,9 @@ export function Form() {
           : 'ورود با موفقیت انجام شد',
       );
       form.reset();
+      router.push('/');
     });
   };
-
-  useEffect(() => {
-    form.setFocus('full_name');
-  }, [form]);
 
   return (
     <section className="flex w-[350px] flex-col gap-5 rounded-xl border bg-white p-4 sm:w-[350px]">
@@ -66,63 +65,48 @@ export function Form() {
         className="flex flex-col gap-2"
       >
         <div className="flex flex-col gap-2.5">
-          <div className="flex flex-col gap-2">
-            <input
-              type="text"
-              spellCheck={false}
-              className={cn(
-                'w-full truncate font-medium rounded-md border p-2.5 border-gray-200 text-slate-500 bg-white text-smp placeholder:text-sm focus:border-red transition-colors',
-                {
-                  'border-red-500': form.formState.errors.full_name,
-                },
-              )}
-              placeholder="نام کامل (فارسی)"
-              {...form.register('full_name')}
-            />
-            <p className="text-sm text-red-500">
-              {form.formState.errors.full_name?.message}
-            </p>
-          </div>
-          <div className="flex flex-col gap-2">
-            <input
-              type="text"
-              spellCheck={false}
-              className={cn(
-                'w-full truncate font-medium rounded-md border p-2.5 border-gray-200 text-slate-500 bg-white text-smp placeholder:text-sm focus:border-red transition-colors',
-                {
-                  'border-red-500': form.formState.errors.username,
-                },
-              )}
-              placeholder="نام کاربری"
-              {...form.register('username')}
-            />
-            <p className="text-sm text-red-500">
-              {form.formState.errors.username?.message}
-            </p>
-          </div>
-          <div className="flex flex-col gap-2">
-            <input
-              type="password"
-              spellCheck={false}
-              className={cn(
-                'w-full truncate font-medium rounded-md border p-2.5 border-gray-200 text-slate-500 bg-white text-smp placeholder:text-sm focus:border-red transition-colors',
-                {
-                  'border-red-500': form.formState.errors.password,
-                },
-              )}
-              placeholder="رمز عبور"
-              {...form.register('password')}
-            />
-            <p className="text-sm text-red-500">
-              {form.formState.errors.password?.message}
-            </p>
-          </div>
+          <Controller
+            control={form.control}
+            name="full_name"
+            render={({ field, fieldState }) => (
+              <Input
+                type="text"
+                placeholder="نام و نام خانوادگی"
+                error={fieldState.error?.message}
+                {...field}
+              />
+            )}
+          />
+          <Controller
+            control={form.control}
+            name="username"
+            render={({ field, fieldState }) => (
+              <Input
+                type="text"
+                placeholder="نام کاربری"
+                error={fieldState.error?.message}
+                {...field}
+              />
+            )}
+          />
+          <Controller
+            control={form.control}
+            name="password"
+            render={({ field, fieldState }) => (
+              <Input
+                type="password"
+                placeholder="رمز عبور"
+                error={fieldState.error?.message}
+                {...field}
+              />
+            )}
+          />
         </div>
         <button
           disabled={isLoadingSubmitBtn}
-          className="mt-1 h-12 w-full justify-center rounded-lg bg-red font-medium text-white disabled:opacity-50"
+          className="mt-1 flex h-12 w-full items-center justify-center rounded-lg bg-red font-medium text-white disabled:opacity-50"
         >
-          ورود
+          {isLoadingSubmitBtn ? <Loader2 className="animate-spin" /> : 'ورود'}
         </button>
       </form>
     </section>

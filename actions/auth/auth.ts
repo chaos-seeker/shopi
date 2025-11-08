@@ -49,13 +49,11 @@ export async function auth(input: {
     return { ok: true, status: 'registered' as const, user };
   }
 
-  if (existing.full_name !== input.full_name.trim()) {
-    return { ok: false, error: 'نام کامل با نام کاربری مطابقت ندارد' };
-  }
+  const isValid =
+    existing.full_name === input.full_name.trim() &&
+    (await verifyPassword(existing.password, input.password));
 
-  const isValid = await verifyPassword(existing.password, input.password);
-  if (!isValid)
-    return { ok: false, error: 'نام کاربری یا رمز عبور اشتباه است' };
+  if (!isValid) return { ok: false, error: 'ورود ناموفق بود' };
 
   return { ok: true, status: 'logged_in' as const, user: existing };
 }
