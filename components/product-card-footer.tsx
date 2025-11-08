@@ -1,8 +1,7 @@
 'use client';
 
 import { useKillua } from 'killua';
-import { FiShoppingBag } from 'react-icons/fi';
-import { HiTrash } from 'react-icons/hi2';
+import { ShoppingBag, Trash2 } from 'lucide-react';
 import { cartSlice } from '@/slices/cart';
 import { TProduct } from '@/types/product';
 import { cn } from '@/utils/cn';
@@ -62,7 +61,7 @@ export function ProductCardButton({
       })}
       onClick={handleAdd}
     >
-      <FiShoppingBag
+      <ShoppingBag
         size={20}
         className={cn({
           'stroke-red': type === 'offer-slider',
@@ -110,7 +109,7 @@ export function ProductCardFooter({
           <span>{quantity}</span>
           {quantity === 1 ? (
             <button onClick={handleRemove}>
-              <HiTrash size={20} />
+              <Trash2 size={20} />
             </button>
           ) : (
             <button onClick={handleDecrement} className="text-lg">

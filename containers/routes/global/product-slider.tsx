@@ -4,7 +4,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import Link from 'next/link';
 import { useRef } from 'react';
-import { HiChevronLeft } from 'react-icons/hi2';
+import { ChevronLeft } from 'lucide-react';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { ProductCard } from '@/components/product-card';
@@ -32,13 +32,14 @@ export function ProductSlider(props: IProductSliderProps) {
           className="flex gap-1 text-sm font-bold transition-all hover:text-red"
         >
           <span>مشاهده همه</span>
-          <HiChevronLeft className="size-4" />
+          <ChevronLeft className="size-4" />
         </Link>
       </div>
       {/* body */}
       <div>
         {/* slider */}
         <div className="bg-white">
+          {/* @ts-ignore - Swiper types incompatibility with React 19 */}
           <Swiper
             slidesPerView="auto"
             spaceBetween={13}
@@ -48,6 +49,7 @@ export function ProductSlider(props: IProductSliderProps) {
           >
             {shuffledProductsData.map((item) => {
               return (
+                // @ts-ignore - SwiperSlide types incompatibility with React 19
                 <SwiperSlide
                   key={item.id}
                   className="!w-[268px] rounded-xl border bg-white transition-all hover:border-gray-300"

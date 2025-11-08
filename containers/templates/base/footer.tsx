@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { HiArrowUp } from 'react-icons/hi2';
+import { ArrowUp } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -114,7 +114,7 @@ const CopyRight = () => {
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       >
         <p className="text-xsp font-bold text-gray-500">بزن بریم بالا</p>
-        <HiArrowUp size={14} />
+        <ArrowUp size={14} />
       </button>
     </div>
   );

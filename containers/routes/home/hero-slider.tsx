@@ -7,7 +7,7 @@ import { heroSliderData } from '@/resources/hero-slider';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
-import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -38,14 +38,14 @@ const PaginationAndNavigation = (props: IPaginationAndNavigationProps) => {
           className="group/navigation flex size-6 items-center justify-center rounded-md bg-white"
           onClick={() => props.swiperRef.current.swiper.slidePrev()}
         >
-          <HiChevronLeft className="fill-gray-600 w-5.5 group-hover/navigation:fill-gray-900" />
+          <ChevronLeft className="stroke-gray-600 w-10 size-4.5 group-hover/navigation:stroke-gray-900" />
         </button>
         <div className="pagination" />
         <button
           className="group/navigation flex size-6 items-center justify-center rounded-md bg-white"
           onClick={() => props.swiperRef.current.swiper.slideNext()}
         >
-          <HiChevronRight className="fill-gray-600 w-5.5 group-hover/navigation:fill-gray-900" />
+          <ChevronRight className="stroke-gray-600 w-10 size-4.5 group-hover/navigation:stroke-gray-900" />
         </button>
       </div>
     </div>
@@ -58,7 +58,7 @@ interface ISliderProps {
 
 const Slider = (props: ISliderProps) => {
   return (
-    // @ts-expect-error - Swiper types incompatibility with React 19
+    // @ts-ignore - Swiper types incompatibility with React 19
     <Swiper
       ref={props.swiperRef}
       slidesPerView={1}
@@ -76,7 +76,7 @@ const Slider = (props: ISliderProps) => {
     >
       {heroSliderData.map((item) => {
         return (
-          // @ts-expect-error - SwiperSlide types incompatibility with React 19
+          // @ts-ignore - SwiperSlide types incompatibility with React 19
           <SwiperSlide key={item.image}>
             <Link href={item.path}>
               <div className="relative aspect-[2/1] bg-gray-100 sm:aspect-[2.5/1]">

@@ -5,7 +5,7 @@ import 'swiper/css/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { ProductCardFooter } from '@/components/product-card-footer';
@@ -22,6 +22,7 @@ export function HeroOfferSlider() {
     <section className="group/section relative z-10 col-span-full overflow-hidden xl:col-span-1">
       {/* slider */}
       <div className="bg-white">
+        {/* @ts-ignore - Swiper types incompatibility with React 19 */}
         <Swiper
           slidesPerView="auto"
           spaceBetween={13}
@@ -40,6 +41,7 @@ export function HeroOfferSlider() {
         >
           {shuffledProductsData.map((item) => {
             return (
+              // @ts-ignore - SwiperSlide types incompatibility with React 19
               <SwiperSlide
                 key={item.id}
                 className="!w-[268px] rounded-xl bg-red xl:size-full xl:!h-[372px] xl:!w-[297px]"
@@ -112,13 +114,13 @@ const NavigationDesktop = (props: INavigationProps) => {
           className="group/navigation_btn flex size-6 items-center justify-center rounded-md bg-white"
           onClick={() => props.swiperRef.current.swiper.slidePrev()}
         >
-          <HiChevronRight className="fill-gray-600 group-hover/navigation_btn:fill-gray-900" />
+          <ChevronRight className="stroke-gray-600 group-hover/navigation_btn:stroke-gray-900 size-4.5" />
         </button>
         <button
           className="group/navigation_btn flex size-6 items-center justify-center rounded-md bg-white"
           onClick={() => props.swiperRef.current.swiper.slideNext()}
         >
-          <HiChevronLeft className="fill-gray-600 group-hover/navigation_btn:fill-gray-900" />
+          <ChevronLeft className="stroke-gray-600 group-hover/navigation_btn:stroke-gray-900 size-4.5" />
         </button>
       </div>
     </div>
@@ -132,13 +134,13 @@ const NavigationMobile = (props: INavigationProps) => {
         className="group/navigation_btn absolute bottom-0 right-1 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-lg border bg-white xl:hidden xl:size-9"
         onClick={() => props.swiperRef.current.swiper.slideNext()}
       >
-        <HiChevronRight className="size-4 fill-gray-600 group-hover/navigation_btn:fill-gray-900" />
+        <ChevronRight className="size-4 stroke-gray-600 group-hover/navigation_btn:stroke-gray-900" />
       </button>
       <button
         className="group/navigation_btn absolute bottom-0 left-1 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-lg border bg-white xl:hidden xl:size-9"
         onClick={() => props.swiperRef.current.swiper.slidePrev()}
       >
-        <HiChevronLeft className="size-4 fill-gray-600 group-hover/navigation_btn:fill-gray-900" />
+        <ChevronLeft className="size-4 stroke-gray-600 group-hover/navigation_btn:stroke-gray-900" />
       </button>
     </div>
   );

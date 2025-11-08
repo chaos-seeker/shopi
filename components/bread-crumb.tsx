@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { HiChevronLeft } from 'react-icons/hi2';
+import { ChevronLeft } from 'lucide-react';
 
 interface IBreadCrumbProps {
   title: string;
@@ -17,7 +17,7 @@ export function BreadCrumb(props: IBreadCrumbProps) {
       </Link>
       {props.link ? (
         <>
-          <HiChevronLeft className="fill-gray-500 text-sm" />
+          <ChevronLeft className="stroke-gray-500 text-sm" />
           <Link
             href={props.link.path}
             className="text-sm font-medium text-gray-500 transition-all hover:text-green"
@@ -26,7 +26,7 @@ export function BreadCrumb(props: IBreadCrumbProps) {
           </Link>
         </>
       ) : null}
-      <HiChevronLeft className="fill-gray-500 text-sm" />
+      <ChevronLeft className="stroke-gray-500 text-sm" />
       <p className="text-sm font-medium text-gray-500">{props.title}</p>
     </div>
   );

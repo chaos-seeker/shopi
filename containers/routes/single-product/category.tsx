@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { HiChevronLeft } from 'react-icons/hi2';
+import { ChevronLeft } from 'lucide-react';
 
 interface ICategoryProps {
   category: {
@@ -30,7 +30,7 @@ export function Category(props: ICategoryProps) {
             </p>
             <p className="font-bold text-gray-600">{props.category.text}</p>
           </div>
-          <HiChevronLeft />
+          <ChevronLeft />
         </div>
       </Link>
     </section>

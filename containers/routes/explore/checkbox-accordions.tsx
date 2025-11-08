@@ -3,7 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useQueryState } from 'nuqs';
 import { useEffect, useState } from 'react';
-import { HiCheck, HiChevronDown } from 'react-icons/hi2';
+import { Check, ChevronDown } from 'lucide-react';
 import { ToggleSection } from '@/components/toggle-section';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
 import { cn } from '@/utils/cn';
@@ -57,7 +57,7 @@ const CheckboxsAccordion = () => {
         className="flex w-full items-center justify-between p-2.5 text-smp font-medium"
       >
         <p className="text-sm text-gray-600 lg:text-smp">برند</p>
-        <HiChevronDown
+        <ChevronDown
           size={18}
           className={cn('transition-all', {
             'rotate-180': isShow,
@@ -123,7 +123,7 @@ const CheckboxItem = (props: ICheckboxItemProps) => {
           { 'bg-green': isChecked },
         )}
       >
-        {isChecked ? <HiCheck className="fill-white p-0.5" /> : null}
+        {isChecked ? <Check className="stroke-white p-0.5" size={14} /> : null}
       </button>
       <p className="text-xsp text-gray-600 lg:text-smp">{props.data.text}</p>
     </div>

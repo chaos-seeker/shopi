@@ -1,5 +1,5 @@
 import { ReactNode, RefObject, useRef } from 'react';
-import { HiMiniXMark } from 'react-icons/hi2';
+import { X } from 'lucide-react';
 import { useOnClickOutside } from 'usehooks-ts';
 import { cn } from '@/utils/cn';
 
@@ -47,7 +47,7 @@ export function ToggleSection(props: IToggleSectionProps) {
                 onClick={props.onClose}
                 className="flex size-6 items-center justify-center overflow-hidden rounded-md bg-red"
               >
-                <HiMiniXMark size={20} className="fill-white" />
+                <X size={20} className="stroke-white" />
               </button>
             </div>
             {/* body */}

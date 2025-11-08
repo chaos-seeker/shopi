@@ -5,7 +5,7 @@ import 'swiper/css/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
-import { HiChevronLeft } from 'react-icons/hi2';
+import { ChevronLeft } from 'lucide-react';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { CardBorderBottom } from '@/components/card-border-bottom';
@@ -29,6 +29,7 @@ interface ISliderProps {
 
 const Slider = (props: ISliderProps) => {
   return (
+    // @ts-ignore - Swiper types incompatibility with React 19
     <Swiper
       slidesPerView="auto"
       spaceBetween={13}
@@ -38,6 +39,7 @@ const Slider = (props: ISliderProps) => {
       className="container"
     >
       {brandSliderData.map((item) => (
+        // @ts-ignore - SwiperSlide types incompatibility with React 19
         <SwiperSlide key={item.id} className="!w-48">
           <Card data={item} />
         </SwiperSlide>
@@ -73,7 +75,7 @@ const Card = (props: ICardProps) => {
           </div>
           <div className="flex gap-1">
             <p className="text-smp font-bold">{props.data.text.en}</p>
-            <HiChevronLeft className="size-4 fill-gray-500" />
+            <ChevronLeft className="size-4 stroke-gray-500" />
           </div>
         </div>
         <CardBorderBottom />

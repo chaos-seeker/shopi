@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useQueryState } from 'nuqs';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FaArrowRight } from 'react-icons/fa6';
+import { ArrowRight } from 'lucide-react';
 import OtpInput from 'react18-input-otp';
 import { z } from 'zod';
 import { useApiCall } from '@/hooks/api-call';
@@ -133,7 +133,7 @@ const FormVerification = () => {
             onClick={handleBackBtn}
             className="w-fit rounded-md border p-2"
           >
-            <FaArrowRight className="fill-red" />
+            <ArrowRight className="stroke-red" />
           </button>
           <p className="font-bold text-gray-500">کد تایید را وارد کنید</p>
         </div>

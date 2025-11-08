@@ -5,7 +5,7 @@ import 'swiper/css/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
-import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { ProductCard } from '@/components/product-card';
@@ -89,6 +89,7 @@ const Slider = (props: ISliderProps) => {
 
   return (
     <div>
+      {/* @ts-ignore - Swiper types incompatibility with React 19 */}
       <Swiper
         slidesPerView="auto"
         spaceBetween={0}
@@ -99,6 +100,7 @@ const Slider = (props: ISliderProps) => {
       >
         {shuffledProductsData.map((item) => {
           return (
+            // @ts-ignore - SwiperSlide types incompatibility with React 19
             <SwiperSlide
               key={item.id}
               className="group !w-[268px] border-l last:border-none"
@@ -123,13 +125,13 @@ const Navigation = (props: INavigationProps) => {
         className="group/navigation_btn absolute -left-4 bottom-0 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-lg border bg-white"
         onClick={() => props.swiperRef.current.swiper.slideNext()}
       >
-        <HiChevronLeft className="size-4 fill-gray-600 group-hover/product-slider_navigation_btn:fill-gray-900" />
+        <ChevronLeft className="size-4 stroke-gray-600 group-hover/product-slider_navigation_btn:stroke-gray-900" />
       </button>
       <button
         className="group/navigation_btn absolute -right-4 bottom-0 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-lg border bg-white"
         onClick={() => props.swiperRef.current.swiper.slidePrev()}
       >
-        <HiChevronRight className="size-4 fill-gray-600 group-hover/product-slider_navigation_btn:fill-gray-900" />
+        <ChevronRight className="size-4 stroke-gray-600 group-hover/product-slider_navigation_btn:stroke-gray-900" />
       </button>
     </div>
   );

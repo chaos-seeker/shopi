@@ -5,16 +5,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { HiOutlineFilter } from 'react-icons/hi';
 import {
-  HiChevronLeft,
-  HiMiniXMark,
-  HiOutlineMagnifyingGlass,
-  HiOutlineShoppingCart,
-  HiOutlineUser,
-  HiTrash,
-} from 'react-icons/hi2';
-import { RiUser3Line } from 'react-icons/ri';
+  ChevronLeft,
+  Filter,
+  Search,
+  ShoppingCart,
+  Trash2,
+  User,
+  X,
+} from 'lucide-react';
 import { ThreeDots } from 'react-loader-spinner';
 import { ToggleSection } from '@/components/toggle-section';
 import { useToggleUrlState } from '@/hooks/toggle-url-state';
@@ -78,7 +77,7 @@ const MobileBottom = () => {
 const MobileTopAuth = () => {
   return (
     <Link href="/auth">
-      <HiOutlineUser size={22} />
+      <User size={22} />
     </Link>
   );
 };
@@ -92,7 +91,7 @@ const MobileBottomSearch = () => {
       {/* field */}
       <div className="flex items-center">
         <Link href="/shop">
-          <HiOutlineMagnifyingGlass size={20} />
+          <Search size={20} />
         </Link>
         <input
           type="text"
@@ -118,6 +117,7 @@ const MobileBottomSearch = () => {
             <div className="p-2 text-smp">
               {searchValue.length ? (
                 <div className="flex items-center justify-center">
+                  {/* @ts-ignore - ThreeDots types incompatibility with React 19 */}
                   <ThreeDots color="#ED1944" width={60} />
                 </div>
               ) : (
@@ -131,7 +131,7 @@ const MobileBottomSearch = () => {
                           className="flex items-center gap-0.5 rounded-md border bg-gray-50 px-1.5 py-1 text-xs font-medium"
                         >
                           <p>{item}</p>
-                          <HiChevronLeft className="size-3.5" />
+                          <ChevronLeft className="size-3.5" />
                         </Link>
                       </li>
                     ))}
@@ -157,7 +157,7 @@ const MobileBottomCart = () => {
         onClick={() => mobileCartToggleUrlState.show()}
         className="relative pr-1.5"
       >
-        <HiOutlineShoppingCart size={22} />
+        <ShoppingCart size={22} />
         <p className="absolute -top-1.5 right-0.5 flex h-3.5 items-center justify-center rounded-[3px] bg-red px-[3px] text-[11px] font-bold text-white">
           {localstorageCart.selectors.totalItems()}
         </p>
@@ -192,7 +192,7 @@ const MobileBottomCart = () => {
                   className="absolute top-0 rounded-md bg-red p-[3px]"
                   onClick={() => localstorageCart.reducers.remove(item)}
                 >
-                  <HiMiniXMark size={15} className="fill-white" />
+                  <X size={15} className="stroke-white" />
                 </button>
                 {/* image */}
                 <Image
@@ -219,7 +219,7 @@ const MobileBottomCart = () => {
                         <button
                           onClick={() => localstorageCart.reducers.remove(item)}
                         >
-                          <HiTrash size={16} className="fill-gray-700" />
+                          <Trash2 size={16} className="stroke-gray-700" />
                         </button>
                       ) : (
                         <button
@@ -308,7 +308,7 @@ const MobileBottomFilter = () => {
       onClick={() => filterToggleUrlState.show()}
       className="relative border-l pl-1 pr-2"
     >
-      <HiOutlineFilter size={20} />
+      <Filter size={20} />
     </button>
   );
 };
@@ -338,7 +338,7 @@ const DesktopTopAuth = () => {
       href="/auth"
       className="group flex items-center gap-1 text-black transition-all hover:text-red"
     >
-      <RiUser3Line size={20} />
+      <User size={20} />
       <span className="font-bold">وارد شوید</span>
     </Link>
   );
@@ -383,7 +383,6 @@ const DesktopBottom = () => {
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
-        {/* cart */}
         <DesktopBottomCart />
       </div>
       <div className="ml-48 flex gap-4">
@@ -407,7 +406,7 @@ const DesktopBottomCart = () => {
       {/* btn */}
       <button className="flex items-center justify-between gap-3 rounded-xl border p-3.5">
         <div className="flex items-center gap-2">
-          <HiOutlineShoppingCart className="text-gray-700" size={24} />
+          <ShoppingCart className="text-gray-700" size={24} />
           <p className="font-bold text-gray-700">سبد خرید</p>
         </div>
         <p className="flex size-6 items-center justify-center rounded-full bg-red text-lg font-bold text-white">
@@ -448,7 +447,7 @@ const DesktopBottomCart = () => {
                     className="absolute top-0 rounded-md bg-red p-[3px]"
                     onClick={() => localstorageCart.reducers.remove(item)}
                   >
-                    <HiMiniXMark size={15} className="fill-white" />
+                    <X size={15} className="stroke-white" />
                   </button>
                   {/* image */}
                   <Image
@@ -477,7 +476,7 @@ const DesktopBottomCart = () => {
                               localstorageCart.reducers.remove(item)
                             }
                           >
-                            <HiTrash size={16} className="fill-gray-700" />
+                            <Trash2 size={16} className="stroke-gray-700" />
                           </button>
                         ) : (
                           <button
@@ -573,7 +572,7 @@ const DesktopBottomSearch = () => {
           onChange={(e) => setSearchValue(e.target.value)}
         />
         <Link href="/shop" className="z-10 flex">
-          <HiOutlineMagnifyingGlass size={20} className="text-gray-400" />
+          <Search size={20} className="text-gray-400" />
         </Link>
       </div>
       {/* section */}
@@ -590,6 +589,7 @@ const DesktopBottomSearch = () => {
           <div className="p-2 text-smp">
             {searchValue.length ? (
               <div className="flex items-center justify-center">
+                {/* @ts-ignore - ThreeDots types incompatibility with React 19 */}
                 <ThreeDots color="#ED1944" width={60} />
               </div>
             ) : (
@@ -603,7 +603,7 @@ const DesktopBottomSearch = () => {
                         className="flex items-center gap-0.5 rounded-md border bg-gray-50 px-1.5 py-1 text-xs font-medium"
                       >
                         <p>{item}</p>
-                        <HiChevronLeft className="size-3.5" />
+                        <ChevronLeft className="size-3.5" />
                       </Link>
                     </li>
                   ))}
