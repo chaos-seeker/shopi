@@ -4,7 +4,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { getAllCategories } from '@/actions/category/get-all-categories';
 import { CardBorderBottom } from '@/components/card-border-bottom';
-import { Skeleton } from '@/components/skeleton';
 import { SliderNavigation } from '@/components/slider-navigation';
 import { TCategory } from '@/types/category';
 import { cn } from '@/utils/cn';
@@ -31,6 +30,10 @@ export function CategorySlider() {
     staleTime: 5 * 60 * 1000,
   });
 
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <section
       className={cn(
@@ -40,46 +43,11 @@ export function CategorySlider() {
         },
       )}
     >
-      {isLoading ? (
-        <CategorySliderSkeleton />
-      ) : (
-        <>
-          <Slider swiperRef={swiperRef} categories={categories || []} />
-          {isPathnameHomepage ? (
-            <SliderNavigation swiperRef={swiperRef} />
-          ) : null}
-        </>
-      )}
+      <Slider swiperRef={swiperRef} categories={categories || []} />
+      {isPathnameHomepage ? (
+        <SliderNavigation swiperRef={swiperRef} />
+      ) : null}
     </section>
-  );
-}
-
-function CategorySliderSkeleton() {
-  return (
-    <Swiper
-      slidesPerView="auto"
-      spaceBetween={13}
-      modules={[Autoplay]}
-      id="category-slider-skeleton"
-      className="container"
-    >
-      {Array.from({ length: 6 }).map((_, index) => (
-        <SwiperSlide key={index} className="w-[250px]!">
-          <div className="group overflow-hidden rounded-xl border bg-white">
-            <div className="flex items-center justify-between gap-5 p-3">
-              <div className="flex items-center gap-3">
-                <Skeleton className="size-[60px] rounded-md" />
-                <div className="flex flex-col gap-2">
-                  <Skeleton className="h-4 w-20" />
-                  <Skeleton className="h-3 w-16" />
-                </div>
-              </div>
-              <CardBorderBottom />
-            </div>
-          </div>
-        </SwiperSlide>
-      ))}
-    </Swiper>
   );
 }
 

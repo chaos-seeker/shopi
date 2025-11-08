@@ -4,7 +4,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { getAllProducts } from '@/actions/product/get-all-products';
 import { ProductCard } from '@/components/product-card';
-import { Skeleton } from '@/components/skeleton';
 import { cn } from '@/utils/cn';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
@@ -99,64 +98,34 @@ const Slider = (props: ISliderProps) => {
     ? [...products].sort(() => Math.random() - 0.5).slice(0, 10)
     : [];
 
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <div className="relative">
-      {isLoading ? (
-        <ProductSliderWithBannerSkeleton />
-      ) : (
-        <>
-          {/* @ts-ignore - Swiper types incompatibility with React 19 */}
-          <Swiper
-            slidesPerView="auto"
-            spaceBetween={0}
-            ref={props.swiperRef}
-            modules={[Autoplay]}
-            id="product-slider"
-            className="rounded-xl border bg-white"
-          >
-            {shuffledProducts.map((item) => {
-              return (
-                // @ts-ignore - SwiperSlide types incompatibility with React 19
-                <SwiperSlide
-                  key={item.id}
-                  className="group !w-[268px] border-l last:border-none"
-                >
-                  <ProductCard data={item} />
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
-          <Navigation swiperRef={props.swiperRef} />
-        </>
-      )}
-    </div>
-  );
-}
-
-function ProductSliderWithBannerSkeleton() {
-  return (
-    <div className="rounded-xl border bg-white">
-      <div className="flex">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <div
-            key={index}
-            className="group w-[268px] border-l last:border-none"
-          >
-            <div className="relative flex h-[330px] w-full flex-col items-center justify-center overflow-hidden p-5">
-              <div className="mb-10 flex flex-col items-center gap-3">
-                <Skeleton className="size-[175px] rounded-md" />
-                <Skeleton className="h-5 w-32" />
-              </div>
-              <div className="absolute bottom-2 left-8">
-                <Skeleton className="h-8 w-24" />
-              </div>
-              <div className="absolute bottom-5 left-3">
-                <Skeleton className="h-3 w-12" />
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* @ts-ignore - Swiper types incompatibility with React 19 */}
+      <Swiper
+        slidesPerView="auto"
+        spaceBetween={0}
+        ref={props.swiperRef}
+        modules={[Autoplay]}
+        id="product-slider"
+        className="rounded-xl border bg-white"
+      >
+        {shuffledProducts.map((item) => {
+          return (
+            // @ts-ignore - SwiperSlide types incompatibility with React 19
+            <SwiperSlide
+              key={item.id}
+              className="group !w-[268px] border-l last:border-none"
+            >
+              <ProductCard data={item} />
+            </SwiperSlide>
+          );
+        })}
+      </Swiper>
+      <Navigation swiperRef={props.swiperRef} />
     </div>
   );
 }

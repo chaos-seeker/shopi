@@ -4,7 +4,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { getAllBrands } from '@/actions/brand/get-all-brands';
 import { CardBorderBottom } from '@/components/card-border-bottom';
-import { Skeleton } from '@/components/skeleton';
 import { SliderNavigation } from '@/components/slider-navigation';
 import { TBrand } from '@/types/brand';
 import { useQuery } from '@tanstack/react-query';
@@ -28,52 +27,15 @@ export function BrandSlider() {
     staleTime: 5 * 60 * 1000,
   });
 
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <section className="group/section container relative z-10 col-span-full flex flex-col overflow-hidden">
-      {isLoading ? (
-        <BrandSliderSkeleton />
-      ) : (
-        <>
-          <Slider swiperRef={swiperRef} brands={brands || []} />
-          <SliderNavigation swiperRef={swiperRef} />
-        </>
-      )}
+      <Slider swiperRef={swiperRef} brands={brands || []} />
+      <SliderNavigation swiperRef={swiperRef} />
     </section>
-  );
-}
-
-function BrandSliderSkeleton() {
-  return (
-    // @ts-ignore - Swiper types incompatibility with React 19
-    <Swiper
-      slidesPerView="auto"
-      spaceBetween={13}
-      modules={[Autoplay]}
-      id="brand-slider-skeleton"
-      className="container"
-    >
-      {Array.from({ length: 6 }).map((_, index) => (
-        // @ts-ignore - SwiperSlide types incompatibility with React 19
-        <SwiperSlide key={index} className="w-48!">
-          <div className="group w-48! overflow-hidden rounded-xl border bg-white">
-            <div className="flex flex-col items-center justify-between gap-5 p-5">
-              <Skeleton className="size-[60px] rounded-full" />
-              <div className="flex w-full items-center justify-between">
-                <div className="flex flex-col gap-2">
-                  <Skeleton className="h-3 w-16" />
-                  <Skeleton className="h-4 w-20" />
-                </div>
-                <div className="flex gap-1">
-                  <Skeleton className="h-4 w-12" />
-                  <Skeleton className="size-4" />
-                </div>
-              </div>
-              <CardBorderBottom />
-            </div>
-          </div>
-        </SwiperSlide>
-      ))}
-    </Swiper>
   );
 }
 
