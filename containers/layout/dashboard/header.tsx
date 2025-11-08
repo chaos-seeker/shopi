@@ -81,6 +81,7 @@ const Tabs = () => {
     { label: 'مدیریت دسته‌بندی‌ها', href: '/dashboard/manage-categories' },
     { label: 'مدیریت برندها', href: '/dashboard/manage-brands' },
     { label: 'مدیریت سفارش‌ها', href: '/dashboard/manage-orders' },
+    { label: 'مدیریت کاربران', href: '/dashboard/manage-users' },
   ];
 
   useEffect(() => {
