@@ -10,6 +10,7 @@ import { useKillua } from 'killua';
 import {
   ChevronLeft,
   Filter,
+  LayoutGrid,
   Search,
   ShoppingCart,
   Trash2,
@@ -69,8 +70,9 @@ const MobileBottom = () => {
   return (
     <div className="flex items-center justify-between border-t pt-3">
       <MobileBottomSearch />
-      <div className="flex items-center">
+      <div className="flex items-center gap-2">
         <MobileBottomFilter />
+        <MobileBottomDashboard />
         <MobileBottomCart />
       </div>
     </div>
@@ -372,6 +374,18 @@ const MobileBottomFilter = () => {
   );
 };
 
+const MobileBottomDashboard = () => {
+  const handleDashboardClick = () => {
+    window.location.href = '/dashboard/manage-products';
+  };
+
+  return (
+    <button onClick={handleDashboardClick} className="relative pr-1.5">
+      <LayoutGrid size={22} />
+    </button>
+  );
+};
+
 const Desktop = () => {
   return (
     <div className="container hidden flex-col py-3 lg:flex">
@@ -449,10 +463,26 @@ const DesktopBottom = () => {
       <div className="flex items-center gap-4">
         <DesktopBottomCart />
       </div>
-      <div className="ml-48 flex gap-4">
+      <div className="ml-48 flex gap-4 items-stretch">
         <DesktopBottomSearch />
+        <DesktopBottomDashboard />
       </div>
     </div>
+  );
+};
+
+const DesktopBottomDashboard = () => {
+  const handleDashboardClick = () => {
+    window.location.href = '/dashboard/manage-products';
+  };
+
+  return (
+    <button
+      onClick={handleDashboardClick}
+      className="flex items-center relative z-10 justify-center rounded-2xl bg-red px-4 text-white font-bold transition-all hover:bg-red/90 self-stretch"
+    >
+      داشبورد
+    </button>
   );
 };
 
