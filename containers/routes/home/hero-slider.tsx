@@ -3,13 +3,13 @@
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { heroSliderData } from '@/resources/hero-slider';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { heroSliderData } from '@/resources/hero-slider';
 
 export function HeroSlider() {
   const swiperRef = useRef<any>(null);
@@ -38,14 +38,14 @@ const PaginationAndNavigation = (props: IPaginationAndNavigationProps) => {
           className="group/navigation flex size-6 items-center justify-center rounded-md bg-white"
           onClick={() => props.swiperRef.current.swiper.slidePrev()}
         >
-          <HiChevronLeft className="fill-gray-600 group-hover/navigation:fill-gray-900" />
+          <HiChevronLeft className="fill-gray-600 w-5.5 group-hover/navigation:fill-gray-900" />
         </button>
         <div className="pagination" />
         <button
           className="group/navigation flex size-6 items-center justify-center rounded-md bg-white"
           onClick={() => props.swiperRef.current.swiper.slideNext()}
         >
-          <HiChevronRight className="fill-gray-600 group-hover/navigation:fill-gray-900" />
+          <HiChevronRight className="fill-gray-600 w-5.5 group-hover/navigation:fill-gray-900" />
         </button>
       </div>
     </div>
@@ -58,6 +58,7 @@ interface ISliderProps {
 
 const Slider = (props: ISliderProps) => {
   return (
+    // @ts-expect-error - Swiper types incompatibility with React 19
     <Swiper
       ref={props.swiperRef}
       slidesPerView={1}
@@ -75,9 +76,10 @@ const Slider = (props: ISliderProps) => {
     >
       {heroSliderData.map((item) => {
         return (
+          // @ts-expect-error - SwiperSlide types incompatibility with React 19
           <SwiperSlide key={item.image}>
             <Link href={item.path}>
-              <div className="aspect-h-1 aspect-w-2 bg-gray-100 sm:aspect-h-1 sm:aspect-w-[2.5] ">
+              <div className="relative aspect-[2/1] bg-gray-100 sm:aspect-[2.5/1]">
                 <Image
                   fill
                   src={item.image}

@@ -87,12 +87,10 @@ export default [
         {
           ignore: [
             '^_',
-            'date-picker',
+            'pagination',
             'scrollbar-hide',
             'show',
             'hide',
-            'aspect-w-',
-            'aspect-h-',
           ],
         },
       ],
