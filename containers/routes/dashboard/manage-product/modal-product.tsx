@@ -9,6 +9,7 @@ import { Input } from '@/components/input';
 import { InputImage } from '@/components/input-image';
 import { Label } from '@/components/label';
 import { Modal } from '@/components/modal';
+import { Select } from '@/components/select';
 import { useApiCall } from '@/hooks/api-call';
 import { TBrand } from '@/types/brand';
 import { TCategory } from '@/types/category';
@@ -22,7 +23,6 @@ import toast from 'react-hot-toast';
 import { z } from 'zod';
 
 const formSchema = z.object({
-  image: z.string().min(1, 'تصویر اصلی الزامی است'),
   gallery: z.array(z.string()).min(1, 'حداقل یک تصویر در گالری الزامی است'),
   category: z
     .object({
@@ -45,7 +45,13 @@ const formSchema = z.object({
   name_fa: z.string().min(1, 'نام فارسی الزامی است'),
   name_en: z.string().min(1, 'نام انگلیسی الزامی است'),
   slug: z.string().min(1, 'اسلاگ الزامی است'),
-  quantity: z.number().min(0, 'موجودی باید بیشتر یا مساوی صفر باشد'),
+  quantity: z.preprocess(
+    (val) => {
+      if (val === undefined || val === '' || val === null) return 0;
+      return Number(val);
+    },
+    z.number().min(0, 'موجودی باید بیشتر یا مساوی صفر باشد'),
+  ),
   property: z.array(
     z.object({
       key: z.string().min(1, 'کلید الزامی است'),
@@ -53,8 +59,20 @@ const formSchema = z.object({
     }),
   ),
   description: z.string().min(1, 'توضیحات الزامی است'),
-  price: z.number().min(0, 'قیمت باید بیشتر یا مساوی صفر باشد'),
-  discount: z.number().min(0).max(100, 'تخفیف باید بین 0 تا 100 باشد'),
+  price: z.preprocess(
+    (val) => {
+      if (val === undefined || val === '' || val === null) return 0;
+      return Number(val);
+    },
+    z.number().min(0, 'قیمت باید بیشتر یا مساوی صفر باشد'),
+  ),
+  discount: z.preprocess(
+    (val) => {
+      if (val === undefined || val === '' || val === null) return 0;
+      return Number(val);
+    },
+    z.number().min(0).max(100, 'تخفیف باید بین 0 تا 100 باشد'),
+  ),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -74,28 +92,61 @@ export function ModalProduct({
 }: IModalProductProps) {
   const queryClient = useQueryClient();
   const [callApi, isLoadingSubmitBtn] = useApiCall();
-  const [imageFile, setImageFile] = useState<File | null>(null);
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
 
-  const { data: categoriesData } = useQuery({
+  const {
+    data: categoriesData,
+    isLoading: isLoadingCategories,
+    error: categoriesError,
+  } = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
-      const result = await getAllCategories();
-      if (result.error) throw new Error(result.error);
-      return result.data;
+      try {
+        const result = await getAllCategories();
+        if (result.error) {
+          console.error('Error fetching categories:', result.error);
+          throw new Error(result.error);
+        }
+        return result.data || [];
+      } catch (error) {
+        console.error('Failed to fetch categories:', error);
+        throw error;
+      }
     },
-    enabled: isOpen,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
-  const { data: brandsData } = useQuery({
+  const {
+    data: brandsData,
+    isLoading: isLoadingBrands,
+    error: brandsError,
+  } = useQuery({
     queryKey: ['brands'],
     queryFn: async () => {
-      const result = await getAllBrands();
-      if (result.error) throw new Error(result.error);
-      return result.data;
+      try {
+        const result = await getAllBrands();
+        if (result.error) {
+          console.error('Error fetching brands:', result.error);
+          throw new Error(result.error);
+        }
+        return result.data || [];
+      } catch (error) {
+        console.error('Failed to fetch brands:', error);
+        throw error;
+      }
     },
-    enabled: isOpen,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
   const { data: productData, isLoading: isLoadingProduct } = useQuery({
@@ -112,7 +163,6 @@ export function ModalProduct({
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      image: '',
       gallery: [],
       category: {
         id: 0,
@@ -147,7 +197,6 @@ export function ModalProduct({
   useEffect(() => {
     if (!isOpen) {
       form.reset();
-      setImageFile(null);
       setGalleryFiles([]);
       setGalleryPreviews([]);
     }
@@ -157,7 +206,6 @@ export function ModalProduct({
     if (mode === 'edit' && productData) {
       const product = productData as TProduct;
       form.reset({
-        image: product.image,
         gallery: product.gallery,
         category: product.category,
         brand: product.brand,
@@ -187,12 +235,7 @@ export function ModalProduct({
   };
 
   const handleSubmitForm = async (data: FormData) => {
-    let imageUrl = data.image;
     let galleryUrls = data.gallery.length > 0 ? data.gallery : galleryPreviews;
-
-    if (imageFile) {
-      imageUrl = await convertFileToBase64(imageFile);
-    }
 
     if (galleryFiles.length > 0 && galleryUrls.length === 0) {
       galleryUrls = await Promise.all(
@@ -202,7 +245,6 @@ export function ModalProduct({
 
     const productData = {
       ...data,
-      image: imageUrl,
       gallery: galleryUrls,
       category: data.category as TCategory,
       brand: data.brand as TBrand,
@@ -220,7 +262,6 @@ export function ModalProduct({
         toast.success('محصول با موفقیت ایجاد شد');
         queryClient.invalidateQueries({ queryKey: ['products'] });
         form.reset();
-        setImageFile(null);
         setGalleryFiles([]);
         setGalleryPreviews([]);
         onClose();
@@ -238,7 +279,6 @@ export function ModalProduct({
         queryClient.invalidateQueries({ queryKey: ['products'] });
         queryClient.invalidateQueries({ queryKey: ['product', productId] });
         form.reset();
-        setImageFile(null);
         setGalleryFiles([]);
         setGalleryPreviews([]);
         onClose();
@@ -292,30 +332,6 @@ export function ModalProduct({
         className="flex flex-col gap-4"
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="md:col-span-2">
-            <Label>تصویر اصلی</Label>
-            <Controller
-              control={form.control}
-              name="image"
-              render={({ field, fieldState }) => (
-                <InputImage
-                  error={fieldState.error?.message}
-                  onChange={async (file) => {
-                    if (file) {
-                      setImageFile(file);
-                      const base64 = await convertFileToBase64(file);
-                      field.onChange(base64);
-                    } else {
-                      setImageFile(null);
-                      field.onChange('');
-                    }
-                  }}
-                  preview={field.value || undefined}
-                />
-              )}
-            />
-          </div>
-
           <div className="md:col-span-2">
             <Label>گالری تصاویر</Label>
             <div className="flex flex-col gap-2">
@@ -389,32 +405,33 @@ export function ModalProduct({
               control={form.control}
               name="category"
               render={({ field, fieldState }) => (
-                <div className="flex flex-col gap-2">
-                  <select
-                    value={field.value.id}
-                    onChange={(e) => {
-                      const selectedCategory = categoriesData?.find(
-                        (cat) => cat.id === Number(e.target.value),
-                      );
-                      if (selectedCategory) {
-                        field.onChange(selectedCategory);
-                      }
-                    }}
-                    className="w-full rounded-md border border-gray-200 p-[9px] text-sm font-medium text-slate-500 focus:border-red"
-                  >
-                    <option value={0}>انتخاب دسته‌بندی</option>
-                    {categoriesData?.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name_fa}
-                      </option>
-                    ))}
-                  </select>
-                  {fieldState.error && (
-                    <p className="text-sm text-red-500">
-                      {fieldState.error.message}
-                    </p>
-                  )}
-                </div>
+                <Select
+                  error={
+                    fieldState.error?.message ||
+                    (categoriesError
+                      ? 'خطا در بارگذاری دسته‌بندی‌ها'
+                      : undefined)
+                  }
+                  value={field.value.id}
+                  onChange={(value) => {
+                    const selectedCategory = (categoriesData || []).find(
+                      (cat) => cat.id === Number(value),
+                    );
+                    if (selectedCategory) {
+                      field.onChange(selectedCategory);
+                    }
+                  }}
+                  placeholder={
+                    isLoadingCategories
+                      ? 'در حال بارگذاری ...'
+                      : 'انتخاب دسته‌بندی'
+                  }
+                  disabled={isLoadingCategories || !!categoriesError}
+                  options={(categoriesData || []).map((category) => ({
+                    value: category.id,
+                    label: category.name_fa,
+                  }))}
+                />
               )}
             />
           </div>
@@ -425,32 +442,29 @@ export function ModalProduct({
               control={form.control}
               name="brand"
               render={({ field, fieldState }) => (
-                <div className="flex flex-col gap-2">
-                  <select
-                    value={field.value.id}
-                    onChange={(e) => {
-                      const selectedBrand = brandsData?.find(
-                        (brand) => brand.id === Number(e.target.value),
-                      );
-                      if (selectedBrand) {
-                        field.onChange(selectedBrand);
-                      }
-                    }}
-                    className="w-full rounded-md border border-gray-200 p-[9px] text-sm font-medium text-slate-500 focus:border-red"
-                  >
-                    <option value={0}>انتخاب برند</option>
-                    {brandsData?.map((brand) => (
-                      <option key={brand.id} value={brand.id}>
-                        {brand.name_fa}
-                      </option>
-                    ))}
-                  </select>
-                  {fieldState.error && (
-                    <p className="text-sm text-red-500">
-                      {fieldState.error.message}
-                    </p>
-                  )}
-                </div>
+                <Select
+                  error={
+                    fieldState.error?.message ||
+                    (brandsError ? 'خطا در بارگذاری برندها' : undefined)
+                  }
+                  value={field.value.id}
+                  onChange={(value) => {
+                    const selectedBrand = (brandsData || []).find(
+                      (brand) => brand.id === Number(value),
+                    );
+                    if (selectedBrand) {
+                      field.onChange(selectedBrand);
+                    }
+                  }}
+                  placeholder={
+                    isLoadingBrands ? 'در حال بارگذاری...' : 'انتخاب برند'
+                  }
+                  disabled={isLoadingBrands || !!brandsError}
+                  options={(brandsData || []).map((brand) => ({
+                    value: brand.id,
+                    label: brand.name_fa,
+                  }))}
+                />
               )}
             />
           </div>
@@ -509,8 +523,13 @@ export function ModalProduct({
                 <Input
                   type="number"
                   error={fieldState.error?.message}
-                  {...field}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
+                  value={field.value ?? ''}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    field.onChange(value === '' ? undefined : Number(value));
+                  }}
+                  onBlur={field.onBlur}
+                  name={field.name}
                 />
               )}
             />
@@ -525,8 +544,13 @@ export function ModalProduct({
                 <Input
                   type="number"
                   error={fieldState.error?.message}
-                  {...field}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
+                  value={field.value ?? ''}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    field.onChange(value === '' ? undefined : Number(value));
+                  }}
+                  onBlur={field.onBlur}
+                  name={field.name}
                 />
               )}
             />
@@ -541,8 +565,13 @@ export function ModalProduct({
                 <Input
                   type="number"
                   error={fieldState.error?.message}
-                  {...field}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
+                  value={field.value ?? ''}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    field.onChange(value === '' ? undefined : Number(value));
+                  }}
+                  onBlur={field.onBlur}
+                  name={field.name}
                 />
               )}
             />

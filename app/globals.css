@@ -28,7 +28,7 @@
   p {
     @apply text-gray-700;
   }
-  input {
+  input, textarea {
     @apply outline-none;
   }
   input[type='number']::-webkit-inner-spin-button,

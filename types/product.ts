@@ -3,7 +3,6 @@ import { TCategory } from './category';
 
 export type TProduct = {
   id: number;
-  image: string;
   gallery: string[];
   category: TCategory;
   brand: TBrand;

@@ -35,18 +35,24 @@ export function ListProducts({
 
   const columns = useMemo(
     () => [
-      columnHelper.accessor('image', {
+      columnHelper.accessor('gallery', {
         header: 'تصویر',
-        cell: (info) => (
-          <div className="relative h-16 w-16 overflow-hidden rounded-md">
-            <Image
-              src={info.getValue()}
-              alt="product"
-              fill
-              className="object-cover"
-            />
-          </div>
-        ),
+        cell: (info) => {
+          const gallery = info.getValue();
+          const firstImage = gallery && gallery.length > 0 ? gallery[0] : '';
+          return firstImage ? (
+            <div className="relative h-16 w-16 overflow-hidden rounded-md">
+              <Image
+                src={firstImage}
+                alt="product"
+                fill
+                className="object-cover"
+              />
+            </div>
+          ) : (
+            <div className="relative h-16 w-16 overflow-hidden rounded-md bg-gray-200" />
+          );
+        },
       }),
       columnHelper.accessor('name_fa', {
         header: 'نام فارسی',

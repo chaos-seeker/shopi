@@ -193,7 +193,11 @@ const MobileBottomCart = () => {
                 </button>
                 <Image
                   alt={item.name_fa}
-                  src={item.image}
+                  src={
+                    item.gallery && item.gallery.length > 0
+                      ? item.gallery[0]
+                      : ''
+                  }
                   width={60}
                   height={60}
                 />
@@ -445,7 +449,11 @@ const DesktopBottomCart = () => {
                   </button>
                   <Image
                     alt={item.name_fa}
-                    src={item.image}
+                    src={
+                      item.gallery && item.gallery.length > 0
+                        ? item.gallery[0]
+                        : ''
+                    }
                     width={60}
                     height={60}
                   />

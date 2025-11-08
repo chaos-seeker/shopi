@@ -84,7 +84,6 @@ EXECUTE FUNCTION update_updated_at_column();
 -- Create products table
 CREATE TABLE IF NOT EXISTS products (
   id BIGSERIAL PRIMARY KEY,
-  image TEXT NOT NULL,
   gallery TEXT[] NOT NULL DEFAULT '{}',
   category_id BIGINT NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
   brand_id BIGINT NOT NULL REFERENCES brands(id) ON DELETE RESTRICT,
@@ -124,6 +123,14 @@ BEGIN
   ) THEN
     ALTER TABLE products ADD CONSTRAINT fk_products_brand_id 
       FOREIGN KEY (brand_id) REFERENCES brands(id) ON DELETE RESTRICT;
+  END IF;
+  
+  -- Remove image column if it exists (migration from image to gallery only)
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns 
+    WHERE table_name = 'products' AND column_name = 'image'
+  ) THEN
+    ALTER TABLE products DROP COLUMN image;
   END IF;
   
   -- Note: If you have existing products, you'll need to update them with a brand_id
