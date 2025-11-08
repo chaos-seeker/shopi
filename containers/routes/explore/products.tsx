@@ -19,20 +19,19 @@ export function Products({ initialProducts }: ProductsProps) {
   const text = searchParams.get('text') || '';
   const sort =
     (searchParams.get('sort') as 'newest' | 'highest' | 'lowest') || 'newest';
-  const filterCategory = searchParams.get('filter-category') || '';
-  const filterBrand = searchParams.get('filter-brand') || '';
+  const filterCategory = searchParams.get('category') || '';
+  const filterBrand = searchParams.get('brand') || '';
 
-  const categoryIds =
-    filterCategory?.split(',').map(Number).filter(Boolean) || [];
-  const brandIds = filterBrand?.split(',').map(Number).filter(Boolean) || [];
+  const categorySlugs = filterCategory?.split(',').filter(Boolean) || [];
+  const brandSlugs = filterBrand?.split(',').filter(Boolean) || [];
 
   // Create a stable query key
   const queryKey = [
     'filtered-products',
     text,
     sort,
-    [...categoryIds].sort().join(','),
-    [...brandIds].sort().join(','),
+    [...categorySlugs].sort().join(','),
+    [...brandSlugs].sort().join(','),
   ].join('|');
 
   // Track initial query key from SSR (only set once on mount)
@@ -68,8 +67,8 @@ export function Products({ initialProducts }: ProductsProps) {
     queryFn: async () => {
       const result = await getFilteredProducts({
         text: text || undefined,
-        categoryIds: categoryIds.length > 0 ? categoryIds : undefined,
-        brandIds: brandIds.length > 0 ? brandIds : undefined,
+        categorySlugs: categorySlugs.length > 0 ? categorySlugs : undefined,
+        brandSlugs: brandSlugs.length > 0 ? brandSlugs : undefined,
         sort: sort || 'newest',
       });
       // Reset loading state when query completes

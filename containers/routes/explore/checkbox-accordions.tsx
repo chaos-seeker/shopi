@@ -79,7 +79,7 @@ const CategoriesAccordion = ({ categories }: CategoriesAccordionProps) => {
             categories.map((category) => (
               <CheckboxItem
                 key={category.id}
-                id={category.id}
+                slug={category.slug}
                 text={category.name_fa}
                 query="category"
               />
@@ -126,7 +126,7 @@ const BrandsAccordion = ({ brands }: BrandsAccordionProps) => {
             brands.map((brand) => (
               <CheckboxItem
                 key={brand.id}
-                id={brand.id}
+                slug={brand.slug}
                 text={brand.name_fa}
                 query="brand"
               />
@@ -143,21 +143,21 @@ const BrandsAccordion = ({ brands }: BrandsAccordionProps) => {
 };
 
 interface ICheckboxItemProps {
-  id: number;
+  slug: string;
   text: string;
   query: 'category' | 'brand';
 }
 
-const CheckboxItem = ({ id, text, query }: ICheckboxItemProps) => {
+const CheckboxItem = ({ slug, text, query }: ICheckboxItemProps) => {
   const { setLoading } = useFiltersLoading();
-  const queryKey = `filter-${query}`;
+  const queryKey = `${query}`;
   const [filterValue, setFilterValue] = useQueryState(queryKey, {
     defaultValue: '',
     shallow: false,
   });
 
-  const selectedIds = filterValue?.split(',').map(Number).filter(Boolean) || [];
-  const isChecked = selectedIds.includes(id);
+  const selectedSlugs = filterValue?.split(',').filter(Boolean) || [];
+  const isChecked = selectedSlugs.includes(slug);
 
   const handleCheck = () => {
     // Show loading immediately before URL update
@@ -165,12 +165,12 @@ const CheckboxItem = ({ id, text, query }: ICheckboxItemProps) => {
     // Use startTransition to make URL update non-blocking
     startTransition(() => {
       if (isChecked) {
-        const updated = selectedIds
-          .filter((selectedId) => selectedId !== id)
-          .map(String);
+        const updated = selectedSlugs.filter(
+          (selectedSlug) => selectedSlug !== slug,
+        );
         setFilterValue(updated.length > 0 ? updated.join(',') : null);
       } else {
-        const updated = [...selectedIds, id].map(String);
+        const updated = [...selectedSlugs, slug];
         setFilterValue(updated.join(','));
       }
     });

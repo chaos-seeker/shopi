@@ -8,4 +8,7 @@ export const userSlice = slice({
   selectors: {
     isLoggedIn: (value) => Boolean(value),
   },
+  reducers: {
+    logout: () => null,
+  },
 });

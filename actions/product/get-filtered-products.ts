@@ -4,16 +4,49 @@ import { supabaseClient } from '@/lib/supabase';
 
 interface GetFilteredProductsParams {
   text?: string;
-  categoryIds?: number[];
-  brandIds?: number[];
+  categorySlugs?: string[];
+  brandSlugs?: string[];
   sort?: 'newest' | 'highest' | 'lowest';
 }
 
 export async function getFilteredProducts(
   params: GetFilteredProductsParams = {},
 ) {
-  const { text, categoryIds, brandIds, sort = 'newest' } = params;
+  const { text, categorySlugs, brandSlugs, sort = 'newest' } = params;
 
+  // Get category IDs from slugs if needed
+  let categoryIds: number[] | undefined;
+  if (categorySlugs && categorySlugs.length > 0) {
+    const { data: categories } = await supabaseClient
+      .from('categories')
+      .select('id')
+      .in('slug', categorySlugs);
+
+    if (categories && categories.length > 0) {
+      categoryIds = categories.map((cat) => cat.id);
+    } else {
+      // If no categories found, return empty array
+      return { data: [] };
+    }
+  }
+
+  // Get brand IDs from slugs if needed
+  let brandIds: number[] | undefined;
+  if (brandSlugs && brandSlugs.length > 0) {
+    const { data: brands } = await supabaseClient
+      .from('brands')
+      .select('id')
+      .in('slug', brandSlugs);
+
+    if (brands && brands.length > 0) {
+      brandIds = brands.map((brand) => brand.id);
+    } else {
+      // If no brands found, return empty array
+      return { data: [] };
+    }
+  }
+
+  // Build query
   let query = supabaseClient.from('products').select(
     `
       *,
