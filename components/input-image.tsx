@@ -2,7 +2,13 @@
 
 import { cn } from '@/utils/cn';
 import Image from 'next/image';
-import { forwardRef, InputHTMLAttributes, useState, useRef } from 'react';
+import {
+  forwardRef,
+  InputHTMLAttributes,
+  useState,
+  useRef,
+  useEffect,
+} from 'react';
 import { X } from 'lucide-react';
 
 interface IInputImageProps
@@ -16,6 +22,10 @@ export const InputImage = forwardRef<HTMLInputElement, IInputImageProps>(
   ({ className, error, onChange, preview: initialPreview, ...props }, ref) => {
     const [preview, setPreview] = useState<string | null>(initialPreview || null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+      setPreview(initialPreview || null);
+    }, [initialPreview]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0] || null;

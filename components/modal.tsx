@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
 interface IModalProps {
   isOpen: boolean;
@@ -11,12 +11,40 @@ interface IModalProps {
 }
 
 export function Modal(props: IModalProps) {
-  if (!props.isOpen) return null;
+  const [isVisible, setIsVisible] = useState(false);
+  const [shouldRender, setShouldRender] = useState(false);
+
+  useEffect(() => {
+    if (props.isOpen) {
+      setShouldRender(true);
+      setTimeout(() => setIsVisible(true), 10);
+    } else {
+      setIsVisible(false);
+      const timer = setTimeout(() => setShouldRender(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [props.isOpen]);
+
+  if (!shouldRender) return null;
+
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      props.onClose();
+    }
+  };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition-opacity duration-300 ${
+        isVisible ? 'opacity-100' : 'opacity-0'
+      }`}
+      onClick={handleBackdropClick}
+    >
       <div
-        className={`flex w-full ${props.className} max-h-[90vh] flex-col rounded-lg bg-white overflow-hidden`}
+        className={`flex w-full ${props.className} max-h-[90vh] flex-col rounded-lg bg-white overflow-hidden transition-opacity duration-300 ${
+          isVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex shrink-0 items-center justify-between border-b px-4 py-2.5">
           <h2 className="font-bold text-gray-900">{props.title}</h2>

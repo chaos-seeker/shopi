@@ -51,7 +51,6 @@ type FormData = z.infer<typeof formSchema>;
 interface IModalProductProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess?: () => void;
   mode: 'create' | 'edit';
   productId?: number;
 }
@@ -59,7 +58,6 @@ interface IModalProductProps {
 export function ModalProduct({
   isOpen,
   onClose,
-  onSuccess,
   mode,
   productId,
 }: IModalProductProps) {
@@ -196,7 +194,6 @@ export function ModalProduct({
         setGalleryFiles([]);
         setGalleryPreviews([]);
         onClose();
-        onSuccess?.();
       });
     } else if (mode === 'edit' && productId) {
       await callApi(updateProduct(productId, productData), (result) => {
@@ -215,7 +212,6 @@ export function ModalProduct({
         setGalleryFiles([]);
         setGalleryPreviews([]);
         onClose();
-        onSuccess?.();
       });
     }
   };
