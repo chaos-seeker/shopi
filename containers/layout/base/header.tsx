@@ -8,7 +8,6 @@ import { userSlice } from '@/slices/user';
 import { cn } from '@/utils/cn';
 import { useKillua } from 'killua';
 import {
-  ChevronLeft,
   Filter,
   LayoutGrid,
   Search,
@@ -19,10 +18,9 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { ThreeDots } from 'react-loader-spinner';
 
 export function Header() {
   return (
@@ -91,61 +89,35 @@ const MobileTopAuth = () => {
 };
 
 const MobileBottomSearch = () => {
-  const searchResultToggleUrlState = useToggleUrlState('search-result');
   const [searchValue, setSearchValue] = useState('');
+  const router = useRouter();
+
+  const handleSearch = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const query = searchValue.trim();
+    if (query) {
+      router.push(`/explore?text=${encodeURIComponent(query)}`);
+    }
+  };
 
   return (
     <div>
       <div className="flex items-center">
-        <Link href="/shop">
+        <button onClick={handleSearch} type="button">
           <Search size={20} />
-        </Link>
+        </button>
         <input
           type="text"
           placeholder="جستجوی محصول"
           className="px-2.5 text-sm font-bold placeholder:text-xsp"
-          onFocus={() => searchResultToggleUrlState.show()}
-          onBlur={() => searchResultToggleUrlState.hide()}
+          value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleSearch(e as any);
+            }
+          }}
         />
-      </div>
-      <div
-        className={cn(
-          'absolute z-50 left-0 h-4 w-screen transition-all top-[110px]',
-          {
-            show: searchResultToggleUrlState.isShow,
-            hide: !searchResultToggleUrlState.isShow,
-          },
-        )}
-      >
-        <div className="container">
-          <div className="rounded-md border bg-white">
-            <div className="p-2 text-smp">
-              {searchValue.length ? (
-                <div className="flex items-center justify-center">
-                  <ThreeDots color="#ED1944" width={60} />
-                </div>
-              ) : (
-                <div className="flex flex-col gap-2">
-                  <p className="text-sm font-medium">بیشترین جستجوها</p>
-                  <ul className="flex gap-2">
-                    {['گوشی', 'لپ تاپ', 'ساعت'].map((item) => (
-                      <li key={item}>
-                        <Link
-                          href={`/shop?q=${item}`}
-                          className="flex items-center gap-0.5 rounded-md border bg-gray-50 px-1.5 py-1 text-xs font-medium"
-                        >
-                          <p>{item}</p>
-                          <ChevronLeft className="size-3.5" />
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
@@ -709,8 +681,16 @@ const DesktopBottomCart = () => {
 };
 
 const DesktopBottomSearch = () => {
-  const searchResultToggleUrlState = useToggleUrlState('search-result');
   const [searchValue, setSearchValue] = useState('');
+  const router = useRouter();
+
+  const handleSearch = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const query = searchValue.trim();
+    if (query) {
+      router.push(`/explore?text=${encodeURIComponent(query)}`);
+    }
+  };
 
   return (
     <div className="relative w-72">
@@ -719,49 +699,17 @@ const DesktopBottomSearch = () => {
           className="bg-transparent text-xsp font-bold"
           type="text"
           placeholder="جستجوی محصول ..."
-          onFocus={() => searchResultToggleUrlState.show()}
-          onBlur={() => searchResultToggleUrlState.hide()}
+          value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleSearch(e as any);
+            }
+          }}
         />
-        <Link href="/shop" className="z-10 flex">
+        <button onClick={handleSearch} type="button" className="z-10 flex">
           <Search size={20} className="text-gray-400" />
-        </Link>
-      </div>
-      <div
-        className={cn(
-          'absolute z-50 left-0 top-[70px] h-4 w-full transition-all',
-          {
-            show: searchResultToggleUrlState.isShow,
-            hide: !searchResultToggleUrlState.isShow,
-          },
-        )}
-      >
-        <div className="rounded-xl border bg-white">
-          <div className="p-2 text-smp">
-            {searchValue.length ? (
-              <div className="flex items-center justify-center">
-                <ThreeDots color="#ED1944" width={60} />
-              </div>
-            ) : (
-              <div className="flex flex-col gap-2">
-                <p className="text-sm font-medium">بیشترین جستجوها</p>
-                <ul className="flex gap-2">
-                  {['گوشی', 'لپ تاپ', 'ساعت'].map((item) => (
-                    <li key={item}>
-                      <Link
-                        href={`/shop?q=${item}`}
-                        className="flex items-center gap-0.5 rounded-md border bg-gray-50 px-1.5 py-1 text-xs font-medium"
-                      >
-                        <p>{item}</p>
-                        <ChevronLeft className="size-3.5" />
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        </div>
+        </button>
       </div>
     </div>
   );
