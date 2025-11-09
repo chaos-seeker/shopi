@@ -45,7 +45,7 @@ export default async function Page({ searchParams }: PageProps) {
   return (
     <FiltersLoadingProvider>
       <ViewportAnimation>
-        <div className="container relative z-10 flex size-full flex-col gap-3">
+        <div className="container relative z-10 flex size-full flex-col gap-3 w-full">
           <div className="flex items-center justify-between gap-3">
             <BreadCrumb title="فروشگاه" />
             <span className="h-px grow bg-[#e6e9ee]" />

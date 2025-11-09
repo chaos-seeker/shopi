@@ -6,18 +6,28 @@ import { UserOrders } from '@/containers/routes/profile/user-orders';
 import { userSlice } from '@/slices/user';
 import { useKillua } from 'killua';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ProfilePage() {
   const user = useKillua(userSlice);
   const userData = user.get();
   const router = useRouter();
+  const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
-    if (!userData) {
-      window.location.href = '/';
-    }
+    const timer = setTimeout(() => {
+      setIsChecking(false);
+      if (!userData) {
+        router.push('/');
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [userData, router]);
+
+  if (isChecking) {
+    return null;
+  }
 
   if (!userData) {
     return null;
@@ -25,7 +35,7 @@ export default function ProfilePage() {
 
   return (
     <ViewportAnimation>
-      <div className="container py-6 h-full">
+      <div className="container h-full w-full">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <ViewportAnimation className="lg:col-span-1">
             <ProfileSidebar />

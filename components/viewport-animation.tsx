@@ -20,7 +20,7 @@ export const ViewportAnimation = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: 0.5, ease: 'easeOut', delay }}
-      className={className}
+      className={`${className} w-full`}
     >
       {children}
     </motion.div>

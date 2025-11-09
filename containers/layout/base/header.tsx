@@ -103,8 +103,7 @@ const MobileBottomSearch = () => {
     }
   }, [searchParams, pathname]);
 
-  const handleSearch = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleSearch = () => {
     const query = searchValue.trim();
     if (query) {
       router.push(`/explore?text=${encodeURIComponent(query)}`);
@@ -113,10 +112,22 @@ const MobileBottomSearch = () => {
     }
   };
 
+  const handleButtonClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    handleSearch();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSearch();
+    }
+  };
+
   return (
     <div>
       <div className="flex items-center">
-        <button onClick={handleSearch} type="button">
+        <button onClick={handleButtonClick} type="button">
           <Search size={20} />
         </button>
         <input
@@ -125,11 +136,7 @@ const MobileBottomSearch = () => {
           className="px-2.5 text-sm font-bold placeholder:text-xsp"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              handleSearch(e as any);
-            }
-          }}
+          onKeyDown={handleKeyDown}
         />
       </div>
     </div>
