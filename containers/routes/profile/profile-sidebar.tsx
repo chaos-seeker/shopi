@@ -20,7 +20,7 @@ export function ProfileSidebar() {
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-lg border bg-white p-4">
+    <div className="flex w-full flex-col gap-4 rounded-lg border bg-white p-4">
       <div className="flex items-center gap-3 border-b pb-4">
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
           <User className="text-gray-600" size={24} />

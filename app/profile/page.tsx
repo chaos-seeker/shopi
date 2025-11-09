@@ -35,7 +35,7 @@ export default function ProfilePage() {
 
   return (
     <ViewportAnimation>
-      <div className="container h-full w-full">
+      <div className="container w-full">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <ViewportAnimation className="lg:col-span-1">
             <ProfileSidebar />

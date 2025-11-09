@@ -88,7 +88,7 @@ export function UserOrders({ userId }: UserOrdersProps) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border">
+    <div className="overflow-x-auto w-full rounded-lg border">
       <table className="w-full">
         <thead className="bg-gray-50">
           {table.getHeaderGroups().map((headerGroup) => (

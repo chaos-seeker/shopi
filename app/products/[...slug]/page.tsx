@@ -51,7 +51,7 @@ export default async function Page(props: IPageProps) {
           </div>
         </ViewportAnimation>
         <div className="gap-5 xl:flex w-full">
-          <ViewportAnimation className="flex flex-col gap-3">
+          <ViewportAnimation className="flex flex-col gap-3 !w-fit">
             <Images
               images={product.gallery}
               title={{ fa: product.name_fa, en: product.name_en }}

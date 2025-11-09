@@ -5,11 +5,13 @@ import Link from 'next/link';
 
 export default function Page() {
   return (
-    <div className="relative flex h-screen items-center justify-center pb-6 pt-20">
+    <div className="relative flex h-screen flex-col items-center justify-center pb-6 pt-20">
       <BackToTop />
-      <ViewportAnimation>
-        <Form />
-      </ViewportAnimation>
+      <div className="flex items-center justify-center">
+        <ViewportAnimation>
+          <Form />
+        </ViewportAnimation>
+      </div>
     </div>
   );
 }
