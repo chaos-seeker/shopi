@@ -19,9 +19,7 @@ export default function LayoutBase(props: ILayoutProps) {
   return (
     <>
       <Header />
-      <main className="flex flex-1 justify-center">
-        {props.children}
-      </main>
+      <main className="flex flex-1 justify-center">{props.children}</main>
       <Footer />
     </>
   );
