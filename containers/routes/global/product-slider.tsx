@@ -20,10 +20,6 @@ interface IProductSliderProps {
 export function ProductSlider(props: IProductSliderProps) {
   const swiperRef = useRef<any>(null);
 
-  const shuffledProducts = props.products
-    ? [...props.products].sort(() => Math.random() - 0.5).slice(0, 10)
-    : [];
-
   return (
     <section className="group/section container relative z-10 col-span-full flex flex-col gap-5 overflow-hidden">
       <div className="flex items-center gap-3">
@@ -46,11 +42,11 @@ export function ProductSlider(props: IProductSliderProps) {
             modules={[Autoplay]}
             id="product-slider"
           >
-            {shuffledProducts.map((item) => {
+            {props.products.map((item) => {
               return (
                 <SwiperSlide
                   key={item.id}
-                  className="!w-[268px] rounded-xl border bg-white transition-all hover:border-gray-300"
+                  className="w-[268px]! rounded-xl border bg-white transition-all hover:border-gray-300"
                 >
                   <ProductCard data={item} />
                 </SwiperSlide>

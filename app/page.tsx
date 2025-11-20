@@ -17,20 +17,16 @@ export default async function Page() {
     getAllBrands(),
   ]);
 
-  const products = productsResult.data || [];
-  const categories = categoriesResult.data || [];
-  const brands = brandsResult.data || [];
-
   return (
     <div className="flex size-full flex-col gap-6">
       <ViewportAnimation>
         <div className="container grid grid-cols-4 gap-5">
           <HeroSlider />
-          <HeroOfferSlider products={products} />
+          <HeroOfferSlider products={productsResult.data!} />
         </div>
       </ViewportAnimation>
       <ViewportAnimation>
-        <CategorySlider categories={categories} isHomepage={true} />
+        <CategorySlider categories={categoriesResult.data!} isHomepage={true} />
       </ViewportAnimation>
       <ViewportAnimation>
         <Banners />
@@ -41,14 +37,14 @@ export default async function Page() {
           position="right"
           path="/"
           image="/images/routes/home/product-slider-with-banner-laptop.png"
-          products={products}
+          products={productsResult.data!}
         />
       </ViewportAnimation>
       <ViewportAnimation>
         <ProductSlider
           title="پرفروش ترین محصولات"
           path="/"
-          products={products}
+          products={productsResult.data!}
         />
       </ViewportAnimation>
       <ViewportAnimation>
@@ -57,11 +53,11 @@ export default async function Page() {
           position="left"
           path="/"
           image="/images/routes/home/product-slider-with-banner-play-station.png"
-          products={products}
+          products={productsResult.data!}
         />
       </ViewportAnimation>
       <ViewportAnimation>
-        <BrandSlider brands={brands} />
+        <BrandSlider brands={brandsResult.data!} />
       </ViewportAnimation>
     </div>
   );

@@ -23,10 +23,6 @@ interface IProductSliderProps {
 export function ProductSliderWithBanner(props: IProductSliderProps) {
   const swiperRef = useRef<any>(null);
 
-  const shuffledProducts = props.products
-    ? [...props.products].sort(() => Math.random() - 0.5).slice(0, 10)
-    : [];
-
   return (
     <section className="group/section container relative z-10 col-span-full grid w-full grid-cols-5 gap-5 overflow-hidden rounded-lg">
       <Banner
@@ -41,7 +37,7 @@ export function ProductSliderWithBanner(props: IProductSliderProps) {
           'md:order-1': props.position === 'right',
         })}
       >
-        <Slider swiperRef={swiperRef} products={shuffledProducts} />
+        <Slider swiperRef={swiperRef} products={props.products} />
       </div>
     </section>
   );

@@ -19,10 +19,6 @@ interface IHeroOfferSliderProps {
 export function HeroOfferSlider({ products }: IHeroOfferSliderProps) {
   const swiperRef = useRef<any>(null);
 
-  const shuffledProducts = products
-    ? [...products].sort(() => Math.random() - 0.5).slice(0, 10)
-    : [];
-
   return (
     <section className="group/section relative z-10 col-span-full overflow-hidden xl:col-span-1">
       <div className="bg-white">
@@ -42,13 +38,13 @@ export function HeroOfferSlider({ products }: IHeroOfferSliderProps) {
             },
           }}
         >
-          {shuffledProducts.map((item) => {
+          {products.map((item) => {
             return (
               <SwiperSlide
                 key={item.id}
-                className="!w-[268px] rounded-xl bg-red xl:size-full xl:!h-[372px] xl:!w-[297px]"
+                className="w-[268px]! rounded-xl bg-red xl:size-full xl:h-[372px]! xl:w-[297px]!"
               >
-                <div className="flex !h-[380px] flex-col items-center justify-center p-5 xl:pb-10">
+                <div className="flex h-[380px]! flex-col items-center justify-center p-5 xl:pb-10">
                   <NavigationDesktop swiperRef={swiperRef} />
                   <Timer />
                   <Link

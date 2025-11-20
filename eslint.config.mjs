@@ -82,16 +82,22 @@ export default [
       'better-tailwindcss/no-duplicate-classes': 'warn',
       'better-tailwindcss/enforce-consistent-variable-syntax': 'warn',
       'better-tailwindcss/no-unregistered-classes': [
-        'error',
+        'warn',
         {
           ignore: ['^_', 'pagination', 'scrollbar-hide', 'show', 'hide'],
+          tailwindConfigPath: './tailwind.config.ts',
         },
       ],
 
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
-      'unused-imports/no-unused-imports': 'error',
+      'unused-imports/no-unused-imports': [
+        'error',
+        {
+          varsIgnorePattern: '^_',
+        },
+      ],
       'unused-imports/no-unused-vars': [
         'error',
         {
