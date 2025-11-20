@@ -1,6 +1,9 @@
 import { getAllBrands } from '@/actions/brand/get-all-brands';
 import { getAllCategories } from '@/actions/category/get-all-categories';
 import { getAllProducts } from '@/actions/product/get-all-products';
+import { getBestSellingProducts } from '@/actions/product/get-best-selling-products';
+import { getCheapestProducts } from '@/actions/product/get-cheapest-products';
+import { getMostExpensiveProducts } from '@/actions/product/get-most-expensive-products';
 import { ViewportAnimation } from '@/components/viewport-animation';
 import { ProductSlider } from '@/containers/routes/global/product-slider';
 import { Banners } from '@/containers/routes/home/banners';
@@ -11,8 +14,18 @@ import { HeroSlider } from '@/containers/routes/home/hero-slider';
 import { ProductSliderWithBanner } from '@/containers/routes/home/product-slider-with-banner';
 
 export default async function Page() {
-  const [productsResult, categoriesResult, brandsResult] = await Promise.all([
+  const [
+    productsResult,
+    cheapestProductsResult,
+    mostExpensiveProductsResult,
+    bestSellingProductsResult,
+    categoriesResult,
+    brandsResult,
+  ] = await Promise.all([
     getAllProducts(),
+    getCheapestProducts(),
+    getMostExpensiveProducts(),
+    getBestSellingProducts(),
     getAllCategories(),
     getAllBrands(),
   ]);
@@ -37,14 +50,14 @@ export default async function Page() {
           position="right"
           path="/"
           image="/images/routes/home/product-slider-with-banner-laptop.png"
-          products={productsResult.data!}
+          products={cheapestProductsResult.data!}
         />
       </ViewportAnimation>
       <ViewportAnimation>
         <ProductSlider
           title="پرفروش ترین محصولات"
           path="/"
-          products={productsResult.data!}
+          products={bestSellingProductsResult.data!}
         />
       </ViewportAnimation>
       <ViewportAnimation>
@@ -53,7 +66,7 @@ export default async function Page() {
           position="left"
           path="/"
           image="/images/routes/home/product-slider-with-banner-play-station.png"
-          products={productsResult.data!}
+          products={mostExpensiveProductsResult.data!}
         />
       </ViewportAnimation>
       <ViewportAnimation>
