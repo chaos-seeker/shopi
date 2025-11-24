@@ -6,6 +6,10 @@ import { TProduct } from '@/types/product';
 export async function createProduct(
   data: Omit<TProduct, 'id' | 'created_at' | 'updated_at'>,
 ) {
+  if (process.env.NODE_ENV !== 'development') {
+    return { error: 'دسترسی محدود شده است!' };
+  }
+
   const { category, brand, ...productData } = data;
   const { data: product, error } = await supabaseClient
     .from('products')

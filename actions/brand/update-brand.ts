@@ -7,6 +7,10 @@ export async function updateBrand(
   id: number,
   data: Partial<Omit<TBrand, 'id' | 'created_at' | 'updated_at'>>,
 ) {
+  if (process.env.NODE_ENV !== 'development') {
+    return { error: 'دسترسی محدود شده است!' };
+  }
+
   const { data: brand, error } = await supabaseClient
     .from('brands')
     .update(data)

@@ -7,6 +7,10 @@ export async function updateProduct(
   id: number,
   data: Partial<Omit<TProduct, 'id' | 'created_at' | 'updated_at'>>,
 ) {
+  if (process.env.NODE_ENV !== 'development') {
+    return { error: 'دسترسی محدود شده است!' };
+  }
+
   const { category, brand, ...productData } = data;
   const updateData: any = { ...productData };
   if (category) {
