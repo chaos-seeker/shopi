@@ -21,7 +21,7 @@ export function Images(props: IImagesProps) {
   const [activedIndex, setActivedIndex] = useState(0);
 
   return (
-    <section className="flex flex-col xl:max-w-[382px]">
+    <section className="flex flex-col">
       <div className="my-3 flex w-full justify-center">
         <Swiper
           ref={swiperImageMainRef}

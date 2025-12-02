@@ -10,7 +10,6 @@ import { Price } from '@/containers/routes/single-product/price';
 import { Quantity } from '@/containers/routes/single-product/quantity';
 import { Title } from '@/containers/routes/single-product/title';
 import { TProduct } from '@/types/product';
-import { notFound } from 'next/navigation';
 
 interface IPageProps {
   params: Promise<{
@@ -25,7 +24,7 @@ export default async function Page(props: IPageProps) {
   const result = await getProductBySlug(productSlug);
 
   if (result.error || !result.data) {
-    notFound();
+    return null;
   }
 
   const product = result.data as TProduct;
@@ -51,7 +50,7 @@ export default async function Page(props: IPageProps) {
           </div>
         </ViewportAnimation>
         <div className="gap-5 xl:flex w-full">
-          <ViewportAnimation className="flex flex-col gap-3 !w-fit">
+          <ViewportAnimation className="flex flex-col gap-3 w-full xl:max-w-[382px]">
             <Images
               images={product.gallery}
               title={{ fa: product.name_fa, en: product.name_en }}
